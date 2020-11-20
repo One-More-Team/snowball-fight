@@ -1,0 +1,78 @@
+.PrimaryButton {
+  padding: 10px 15px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  color: var(--color-7);
+  background-color: var(--color-3);
+  font-weight: normal;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  overflow: hidden;
+  transition: width 0.2s;
+  white-space: nowrap;
+  position: relative;
+  user-select: none;
+
+  &:hover {
+    filter: drop-shadow(0px 0px 5px var(--color-3)) contrast(1.2);
+  }
+}
+
+.SecondaryButton {
+  @extend .PrimaryButton;
+  background-color: var(--color-5);
+
+  &:hover {
+    filter: drop-shadow(0px 0px 5px var(--color-5)) contrast(1.2);
+  }
+}
+
+.TertiaryButton {
+  @extend .PrimaryButton;
+  background-color: var(--color-0);
+
+  &:hover {
+    filter: drop-shadow(0px 0px 5px var(--color-0)) contrast(1.2);
+  }
+}
+
+.OutlineButton {
+  @extend .PrimaryButton;
+
+  border: 2px solid var(--color-7);
+  color: var(--color-7);
+  background: initial;
+
+  &:hover {
+    background-color: var(--color-7);
+    color: var(--color-6);
+    filter: drop-shadow(0px 0px 5px var(--color-7)) contrast(1.2);
+  }
+}
+
+.IconMargin {
+  margin-right: 10px;
+}
+
+.Loading {
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.Disabled {
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.Selected {
+  color: var(--color-6);
+  background-color: var(--color-7);
+}

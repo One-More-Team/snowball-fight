@@ -1,21 +1,73 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect, Route, Switch } from "react-router";
+import { IntlProvider } from "react-intl";
+import { GetUser } from "./store/selectors/auth";
+import { BrowserRouter } from "react-router-dom";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
-}
+import SignIn from "./components/auth/sign-in/sign-in";
+import SignUp from "./components/auth/sign-up/sign-up";
+
+import {
+  GetSiteLanguageId,
+  GetSiteLanguageMessages,
+} from "./store/selectors/site-language";
+import Button, { ButtonStyle } from "./components/form/button/button";
+import { signOutRequest } from "./store/actions/auth";
+
+const App = () => {
+  const dispatch = useDispatch();
+  const user = useSelector(GetUser);
+  const siteLanguageId = useSelector(GetSiteLanguageId);
+  const siteLanguageMessages = useSelector(GetSiteLanguageMessages);
+
+  const signOut = () => dispatch(signOutRequest());
+  /*const redirectToHome = () => (
+    <Redirect
+      to={{
+        pathname: "/",
+      }}
+    />
+  );
+
+  const redirectToLogin = () => (
+    <Redirect
+      to={{
+        pathname: "/sign-in",
+      }}
+    />
+  );*/
+  return (
+    <IntlProvider
+      locale={siteLanguageId}
+      messages={siteLanguageMessages}
+      onError={() => {}}
+    >
+      <BrowserRouter basename="">
+        {user ? (
+          <>
+            <Button
+              messageId="sign-out"
+              icon="fa-sign-out-alt"
+              style={ButtonStyle.Secondary}
+              onClick={signOut}
+              autoWidth={false}
+            />
+          </>
+        ) : (
+          <>
+            {" "}
+            <Switch>
+              <Route exact path="/" component={SignIn} />
+              <Route path="/sign-in" component={SignIn} />
+              <Route path="/sign-up" component={SignUp} />
+            </Switch>
+          </>
+        )}
+      </BrowserRouter>
+    </IntlProvider>
+  );
+};
 
 export default App;
