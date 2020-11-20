@@ -1,0 +1,4 @@
+export const ANIMATION = {
+  IDLE: "ANIMATION.IDLE",
+  WALK: "ANIMATION.WALK",
+};
