@@ -2,8 +2,6 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 import "firebase/storage";
-import "firebase/firestore";
-import "@firebase/firestore";
 import ReduxSagaFirebase from "redux-saga-firebase";
 
 const firebaseConfig = {
@@ -18,5 +16,4 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-export const firestore = firebase.firestore();
 export const rsf = new ReduxSagaFirebase(firebase);
