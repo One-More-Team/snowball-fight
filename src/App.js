@@ -16,6 +16,7 @@ import {
 import Button, { ButtonStyle } from "./components/form/button/button";
 import { signOutRequest } from "./store/actions/auth";
 import Snow from "./components/snow/snow";
+import { connectWS } from "./store/actions/websocket";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const App = () => {
   const siteLanguageMessages = useSelector(GetSiteLanguageMessages);
 
   const signOut = () => dispatch(signOutRequest());
+  const connect = () => dispatch(connectWS());
   /*const redirectToHome = () => (
     <Redirect
       to={{
@@ -47,6 +49,13 @@ const App = () => {
     >
       <Snow />
       <BrowserRouter basename="">
+        <Button
+          messageId="connect"
+          icon="fa-sign-out-alt"
+          style={ButtonStyle.Secondary}
+          onClick={connect}
+          autoWidth={false}
+        />
         {user ? (
           <Button
             messageId="sign-out"

@@ -8,6 +8,7 @@ import { createStore, compose, combineReducers, applyMiddleware } from "redux";
 import authReducer from "./store/reducers/auth";
 import siteLanguageReducer from "./store/reducers/site-language";
 import IndexSaga from "./saga/index";
+import websocketReducer from "./store/reducers/websocket";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -15,6 +16,7 @@ const sagaMiddleware = createSagaMiddleware();
 const rootReducer = combineReducers({
   authReducer,
   siteLanguageReducer,
+  websocketReducer,
 });
 
 const store = createStore(
