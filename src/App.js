@@ -15,6 +15,7 @@ import {
 } from "./store/selectors/site-language";
 import Button, { ButtonStyle } from "./components/form/button/button";
 import { signOutRequest } from "./store/actions/auth";
+import Snow from "./components/snow/snow";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ const App = () => {
       messages={siteLanguageMessages}
       onError={() => {}}
     >
+      <Snow />
       <BrowserRouter basename="">
         {user ? (
           <Button

@@ -8,7 +8,7 @@ const initialState = {
   messages: {
     "sign-in": "Sign In",
     "sign-up": "Sign Up",
-    "sign-in-title": "Sign in to Snow Ball",
+    "sign-in-title": "Sign in to Snowball Fight",
   },
 };
 

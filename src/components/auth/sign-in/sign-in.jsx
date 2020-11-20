@@ -11,6 +11,7 @@ import {
   GetSignInError,
 } from "../../../store/selectors/auth";
 import { FormattedMessage } from "react-intl";
+import Guest from "../guest/guest";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -100,6 +101,7 @@ const SignIn = () => {
           />
         </div>
       </form>
+      <Guest />
     </div>
   );
 };

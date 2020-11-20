@@ -11,6 +11,7 @@ import {
 
 import authStyles from "../auth.module.scss";
 import formStyle from "../../../common/style/form.module.scss";
+import Guest from "../guest/guest";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -145,6 +146,7 @@ const SignUp = () => {
           />
         </div>
       </form>
+      <Guest />
     </div>
   );
 };
