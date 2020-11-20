@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect, Route, Switch } from "react-router";
+import { /* Redirect, */ Route, Switch } from "react-router";
 import { IntlProvider } from "react-intl";
 import { GetUser } from "./store/selectors/auth";
 import { BrowserRouter } from "react-router-dom";
@@ -46,24 +46,19 @@ const App = () => {
     >
       <BrowserRouter basename="">
         {user ? (
-          <>
-            <Button
-              messageId="sign-out"
-              icon="fa-sign-out-alt"
-              style={ButtonStyle.Secondary}
-              onClick={signOut}
-              autoWidth={false}
-            />
-          </>
+          <Button
+            messageId="sign-out"
+            icon="fa-sign-out-alt"
+            style={ButtonStyle.Secondary}
+            onClick={signOut}
+            autoWidth={false}
+          />
         ) : (
-          <>
-            {" "}
-            <Switch>
-              <Route exact path="/" component={SignIn} />
-              <Route path="/sign-in" component={SignIn} />
-              <Route path="/sign-up" component={SignUp} />
-            </Switch>
-          </>
+          <Switch>
+            <Route exact path="/" component={SignIn} />
+            <Route path="/sign-in" component={SignIn} />
+            <Route path="/sign-up" component={SignUp} />
+          </Switch>
         )}
       </BrowserRouter>
     </IntlProvider>
