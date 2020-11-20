@@ -17,7 +17,6 @@ jobs:
           ls
       - name: Run build
         id: build
-        run: cd ./snowball-fight
         run: npm install
       - run: npm run build
       - name: List files after build
