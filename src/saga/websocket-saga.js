@@ -109,7 +109,7 @@ function doSend(msgObj) {
 function* showLobby() {
   yield delay(500);
   info("CHANGING ROUTE TO LOBBY");
-  yield put(push("/lobby"));
+  //yield put(push("/lobby"));
 }
 
 const WebSocketSaga = [
