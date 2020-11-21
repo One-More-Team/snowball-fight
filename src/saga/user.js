@@ -7,9 +7,15 @@ import { setUser } from "../store/actions/auth";
 import { storeUserData } from "../store/actions/user";
 
 function* _setUser(action) {
-  const databaseRef = firebase.database().ref(`${USERS}/${action.payload.uid}`);
-  const onChangeChannel = eventChannel((emit) => databaseRef.on("value", emit));
-  yield takeEvery(onChangeChannel, onChangeHandler);
+  if (action.payload) {
+    const databaseRef = firebase
+      .database()
+      .ref(`${USERS}/${action.payload.uid}`);
+    const onChangeChannel = eventChannel((emit) =>
+      databaseRef.on("value", emit)
+    );
+    yield takeEvery(onChangeChannel, onChangeHandler);
+  }
 }
 
 function* onChangeHandler(snap) {
