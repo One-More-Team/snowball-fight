@@ -1,4 +1,3 @@
-import { connectionState } from "../../enums/enums";
 import {
   CONNECTED_TO_WS,
   START_GAME,
@@ -12,7 +11,11 @@ const initialState = {
   selectedGameMode: "",
   gameModeCurrentUsers: 0,
   gameModeMaxUsers: 0,
-  players: [],
+  players: [{
+    spawnIndex: 0, id: 0, name: 'Test Elek', kill: 1, die: 2,
+  }, {
+    spawnIndex: 5, id: 1, name: 'Homeless Couple', kill: 3, die: 4,
+  }],
 };
 
 const websocketReducer = (state = initialState, action) => {

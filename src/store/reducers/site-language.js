@@ -1,14 +1,17 @@
 import {
   CHANGE_SITE_LANGUAGE,
   SAVE_SITE_TRANSLATION_DATA,
-} from "../actions/site-language";
+} from '../actions/site-language';
 
 const initialState = {
-  languageId: "en",
+  languageId: 'en',
   messages: {
-    "sign-in": "Sign In",
-    "sign-up": "Sign Up",
-    "sign-in-title": "Sign in to Snowball Fight",
+    'sign-in': 'Sign In',
+    'sign-up': 'Sign Up',
+    'sign-in-title': 'Sign in to Snowball Fight',
+    'stat-killed': 'Killed',
+    'stat-death': 'Death',
+    'stat-name': 'Name',
   },
 };
 
