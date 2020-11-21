@@ -5,9 +5,15 @@ const connectionState = {
   CONNECTION_HAD_ERROR: "CONNECTION_ERROR",
 };
 
-const snowBallState = {
-  INITIAL: "INITIAL",
-  READY: "READY",
+const gameModes = {
+  VERSUS: "VERSUS",
+  WINGMAN: "WINGMAN",
+  DEATHMATCH: "DEATHMATCH",
 };
 
-export { connectionState, snowBallState };
+const ServerMessages = {
+  PLAYERNUM: "playerNum",
+  READY: "ready",
+};
+
+export { connectionState, gameModes, ServerMessages };

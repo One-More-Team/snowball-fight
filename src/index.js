@@ -9,6 +9,7 @@ import authReducer from "./store/reducers/auth";
 import siteLanguageReducer from "./store/reducers/site-language";
 import IndexSaga from "./saga/index";
 import websocketReducer from "./store/reducers/websocket";
+import appReducer from "./store/reducers/app";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   authReducer,
   siteLanguageReducer,
   websocketReducer,
+  appReducer,
 });
 
 const store = createStore(
