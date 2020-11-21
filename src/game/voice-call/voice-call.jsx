@@ -19,11 +19,11 @@ const VoiceCall = () => {
   const innerStream = useSelector(GetInnerStream);
 
   useEffect(() => {
-    outerVideo.current.srcObject = mediaDevices;
+    if (mediaDevices) outerVideo.current.srcObject = mediaDevices;
   }, [mediaDevices]);
 
   useEffect(() => {
-    innerVideo.current.srcObject = innerStream[0];
+    if (innerStream) innerVideo.current.srcObject = innerStream;
   }, [innerStream]);
 
   const onChange = (value) => dispatch(value ? startCall() : stopCall());

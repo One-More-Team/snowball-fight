@@ -1,4 +1,4 @@
-import { eventChannel } from 'redux-saga';
+import { eventChannel } from "redux-saga";
 import {
   call,
   put,
@@ -7,14 +7,14 @@ import {
   takeEvery,
   fork,
   select,
-} from 'redux-saga/effects';
-import { ServerMessages } from '../enums/enums';
-import { INIT_CONNECTION } from '../store/actions/common';
+} from "redux-saga/effects";
+import { ServerMessages } from "../enums/enums";
+import { INIT_CONNECTION } from "../store/actions/common";
 import {
   storeSDPAnswer,
   storeSDPOffer,
   storeUserID,
-} from '../store/actions/user';
+} from "../store/actions/user";
 import {
   startGame,
   storePlayers,
@@ -22,14 +22,14 @@ import {
   CONNECTED_TO_WS,
   connectedToWS,
   updatePlayerNumbers, START_GAME,
-} from '../store/actions/websocket';
-import { GetUser } from '../store/selectors/auth';
+} from "../store/actions/websocket";
+import { GetUser } from "../store/selectors/auth";
 
-import { GetGameMode } from '../store/selectors/websocket';
-import { info } from '../utils/logger';
+import { GetGameMode } from "../store/selectors/websocket";
+import { info } from "../utils/logger";
 
-const wsUri = 'wss://192.168.2.109:8081';
-// const wsUri = "wss://snowball-fight.herokuapp.com";
+//const wsUri = 'wss://192.168.2.109:8081';
+const wsUri = "wss://snowball-fight.herokuapp.com";
 let websocket;
 
 function closeWebSocket() {
@@ -38,12 +38,12 @@ function closeWebSocket() {
 
 function* connectAndStart({ gameMode }) {
   yield delay(500);
-  info('New game selected:', gameMode);
+  info("New game selected:", gameMode);
 
   const prevGameMode = yield select(GetGameMode);
-  info('Previous Game:', prevGameMode);
-  if (prevGameMode !== '' && prevGameMode !== gameMode) {
-    info('Game change detected -> Closing WSS');
+  info("Previous Game:", prevGameMode);
+  if (prevGameMode !== "" && prevGameMode !== gameMode) {
+    info("Game change detected -> Closing WSS");
     yield call(closeWebSocket);
   }
 
@@ -52,9 +52,9 @@ function* connectAndStart({ gameMode }) {
   yield put(updateGameMode(gameMode));
 
   const user = yield select(GetUser);
-  info('disply name', user.displayName);
+  info("disply name", user.displayName);
   yield call(doSend, {
-    header: 'start',
+    header: "start",
     data: { gameMode: gameMode.toLowerCase(), userName: user.displayName },
   });
 }
@@ -75,7 +75,7 @@ function* createWebSocket() {
 function subscribe(socket) {
   return new eventChannel((emit) => {
     socket.onopen = () => {
-      info('WS CONNECTED');
+      info("WS CONNECTED");
       emit(connectedToWS());
     };
 
@@ -86,9 +86,9 @@ function subscribe(socket) {
       switch (command) {
         case ServerMessages.PLAYERNUM: {
           info(
-            'Player Number Updated ',
+            "Player Number Updated ",
             rawData.data.playerNum,
-            rawData.data.expectedPlayerNum,
+            rawData.data.expectedPlayerNum
           );
           emit(updatePlayerNumbers(rawData.data));
           break;
@@ -118,11 +118,11 @@ function subscribe(socket) {
 }
 
 function onClose() {
-  info('DISCONNECTED');
+  info("DISCONNECTED");
 }
 
 function onError() {
-  info('ERROR');
+  info("ERROR");
 }
 
 export function doSend(msgObj) {
