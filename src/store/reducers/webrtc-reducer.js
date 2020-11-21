@@ -47,7 +47,7 @@ const webRTCReducer = (state = initialState, action) => {
     case SAVE_INNER_STREAM:
       return {
         ...state,
-        innerStreams: action.payload,
+        innerStream: action.payload,
       };
 
     default:
