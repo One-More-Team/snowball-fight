@@ -11,7 +11,6 @@ import {
   updatePlayerNumbers,
 } from "../store/actions/websocket";
 import { info } from "../utils/logger";
-import { push } from "react-router-redux";
 
 const INIT = "init";
 const JOIN = "join";

@@ -30,6 +30,13 @@ const GameModes = () => {
 
   return (
     <div className={style.wrapper}>
+      <Button
+        messageId="sign-out"
+        icon="fa-sign-out-alt"
+        style={ButtonStyle.Secondary}
+        onClick={signOut}
+        autoWidth={false}
+      />
       <div className={style.options}>
         {[gameModes.VERSUS, gameModes.WINGMAN, gameModes.DEATHMATCH].map(
           (m) => {
