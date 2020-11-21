@@ -3,6 +3,11 @@ export const ON_SNOW_BALL_READY = "ON_SNOW_BALL_READY";
 export const UPDATE_PLAYER_NUMBERS = "UPDATE_PLAYER_NUMBERS";
 export const STORE_PLAYERS = "STORE_PLAYERS";
 export const STORE_GAME_MODE = "STORE_GAME_MODE";
+export const START_GAME = "START_GAME";
+
+export const startGame = () => ({
+  type: START_GAME,
+});
 
 export const updateGameMode = (gameMode) => ({
   type: STORE_GAME_MODE,
