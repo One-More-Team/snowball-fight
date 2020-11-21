@@ -18,9 +18,6 @@ function* _setUser(action) {
   }
 }
 
-/* displayName: `Guest-${Math.floor(Math.random() * 9999)}`,
-    photoURL: `https://gravatar.com/avatar/${md5(Date().now)}?d=identicon`, */
-
 function* onChangeHandler(snap) {
   const userData = snap.val();
   yield put(storeUserData(userData));

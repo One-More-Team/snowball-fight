@@ -14,6 +14,7 @@ import websocketReducer from "./store/reducers/websocket";
 import appReducer from "./store/reducers/app";
 import userReducer from "./store/reducers/user";
 import notificationReducer from "./store/reducers/notification";
+import dialogReducer from "./store/reducers/dialog";
 
 import "./index.css";
 
@@ -37,6 +38,7 @@ const rootReducer = combineReducers({
   appReducer,
   userReducer,
   notificationReducer,
+  dialogReducer,
 });
 
 const store = createStore(

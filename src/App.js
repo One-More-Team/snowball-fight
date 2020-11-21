@@ -23,6 +23,7 @@ import Lobby from "./components/lobby/lobby";
 import Notification from "./components/notification/notification";
 
 import "./App.scss";
+import Dialog from "./components/dialog/dialog";
 
 const App = () => {
   const user = useSelector(GetUser);
@@ -70,6 +71,7 @@ const App = () => {
         <i className="fas fa-cog"></i> loading...
       </div>
       <Notification />
+      <Dialog />
       <Snow />
       <BrowserRouter basename="">
         {user ? (
