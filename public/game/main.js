@@ -13,6 +13,7 @@ const USE_DEBUG_RENDERER = true;
 let debugRenderer = null;
 
 const clock = new THREE.Clock();
+const controller = { movement: { x: 0, y: 0 }, rotation: { x: 0, y: 0 } };
 
 let phisycsWorld;
 let scene;
@@ -109,6 +110,8 @@ const animate = () => {
   updateUsers(delta);
   syncOwnUser({ serverCall: _serverCall, controls });
 
+  controls.setMovement(controller.movement);
+  controls.setRotation(controller.rotation);
   controls.update(delta * 1000);
   renderer.render(scene, camera);
 
@@ -169,3 +172,7 @@ window.addUsers = (users) => {
 };
 window.removeUser = (id) => removeUser({ scene, id });
 window.updatePosition = syncUsers;
+window.touchController = {
+  movement: { reportPercentages: (v) => (controller.movement = { ...v }) },
+  rotation: { reportPercentages: (v) => (controller.rotation = { ...v }) },
+};

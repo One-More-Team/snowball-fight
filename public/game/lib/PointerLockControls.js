@@ -24,6 +24,23 @@ var PointerLockControls = function (
   var moveLeft = false;
   var moveRight = false;
 
+  this.setMovement = (movement) => {
+    moveForward = movement.y > 0;
+    moveBackward = movement.y < 0;
+    moveLeft = movement.x > 0;
+    moveRight = movement.x < 0;
+  };
+
+  this.setRotation = (rotation) => {
+    yawObject.rotation.y -= -rotation.x * 0.02;
+    pitchObject.rotation.x -= -rotation.y * 0.02;
+
+    pitchObject.rotation.x = Math.max(
+      -PI_2,
+      Math.min(PI_2, pitchObject.rotation.x)
+    );
+  };
+
   var canJump = false;
 
   var contactNormal = new CANNON.Vec3(); // Normal in the contact, pointing *out* of whatever the player touched

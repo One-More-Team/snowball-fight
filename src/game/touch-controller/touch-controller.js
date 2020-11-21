@@ -4,7 +4,7 @@ import styles from "./touch-controller.module.scss";
 
 const TOUCH_STICK_AREA_RADIUS = 75;
 
-const TouchController = () => {
+const TouchController = ({ reportPercentages }) => {
   const isDragged = useRef(false);
   const area = useRef();
   const stickArea = useRef();
@@ -26,6 +26,15 @@ const TouchController = () => {
       top = topOffset + TOUCH_STICK_AREA_RADIUS * Math.sin(angle);
     }
 
+    if (reportPercentages) {
+      const xDistance = leftOffset - left;
+      const yDistance = topOffset - top;
+      reportPercentages({
+        x: xDistance / TOUCH_STICK_AREA_RADIUS,
+        y: yDistance / TOUCH_STICK_AREA_RADIUS,
+      });
+    }
+
     stick.current.style.left = `${left}px`;
     stick.current.style.top = `${top}px`;
   };
@@ -36,9 +45,9 @@ const TouchController = () => {
     for (let i = 0; i < e.targetTouches.length; i++) {
       const { target } = e.targetTouches[i];
       if (
-        target == area.current ||
-        target == stickArea.current ||
-        target == stick.current
+        target === area.current ||
+        target === stickArea.current ||
+        target === stick.current
       ) {
         touch = e.targetTouches[i];
       }
@@ -64,6 +73,13 @@ const TouchController = () => {
         ` ${styles.Active}`,
         ""
       );
+
+      if (reportPercentages) {
+        reportPercentages({
+          x: 0,
+          y: 0,
+        });
+      }
     }
   };
 
@@ -74,9 +90,9 @@ const TouchController = () => {
       for (let i = 0; i < e.targetTouches.length; i++) {
         const { target } = e.targetTouches[i];
         if (
-          target == area.current ||
-          target == stickArea.current ||
-          target == stick.current
+          target === area.current ||
+          target === stickArea.current ||
+          target === stick.current
         ) {
           touch = e.targetTouches[i];
         }
