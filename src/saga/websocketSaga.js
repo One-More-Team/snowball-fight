@@ -28,7 +28,8 @@ const JOIN = "join";
 const LEAVE = "leave";
 const UPDATEPOSITION = "updatePosition";
 
-const wsUri = "wss://snow-ball.herokuapp.com";
+// const wsUri = "wss://snow-ball.herokuapp.com";
+const wsUri = "ws://echo.websocket.org";
 let websocket;
 
 function* createWebSocket(action) {
@@ -90,8 +91,6 @@ function subscribe(socket) {
 function writeToScreen(message) {
   console.log(`${message}`);
 }
-
-function onOpen(evt) {}
 
 function onClose(evt) {
   writeToScreen("DISCONNECTED");
@@ -155,6 +154,7 @@ function* sendUserToShop(action) {
 }
 
 function* clearUserFromShop(action) {
+  yield delay(1);
   window.removeUser(action.userID);
 }
 
