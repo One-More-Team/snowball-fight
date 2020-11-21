@@ -159,6 +159,10 @@
   color: #fff;
   opacity: 1 !important;
   filter: drop-shadow(2px 4px 6px black);
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
 }
 
 @keyframes Search {
