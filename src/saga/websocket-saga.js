@@ -29,7 +29,7 @@ const JOIN = "join";
 const LEAVE = "leave";
 const UPDATEPOSITION = "updatePosition";
 
-const wsUri = "wss://192.168.2.109:8081";
+const wsUri = "wss://snowball-fight.herokuapp.com";
 let websocket;
 
 function* connectAndStart({ gameMode }) {
