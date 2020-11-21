@@ -15,7 +15,7 @@ const initialState = {
   state: STREAM_STATE.INITIAL_STATE,
   mediaDevices: null,
   startTime: 0,
-  innerStream: [],
+  innerStream: null,
   isInitedByCurrentUser: false,
 };
 
@@ -36,7 +36,6 @@ const webRTCReducer = (state = initialState, action) => {
       };
 
     case SAVE_MEDIA_DEVICES:
-      console.log(action.payload);
       return {
         ...state,
         mediaDevices: action.payload,
