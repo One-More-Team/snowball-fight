@@ -23,7 +23,6 @@ const VoiceCall = () => {
   }, [mediaDevices]);
 
   useEffect(() => {
-    console.log(innerStream);
     if (innerStream) innerVideo.current.srcObject = innerStream;
   }, [innerStream]);
 
