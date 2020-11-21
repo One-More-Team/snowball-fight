@@ -16,7 +16,7 @@ import {
 } from "./store/selectors/site-language";
 import Button, { ButtonStyle } from "./components/form/button/button";
 import Snow from "./components/snow/snow";
-import GameModes from "./components/gamemodes/gameModes";
+import GameModes from "./components/game-modes/game-modes";
 import GameUi from "./game/game-ui";
 import { GetCurrentRoute } from "./store/selectors/app";
 
