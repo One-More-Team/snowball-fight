@@ -8,15 +8,14 @@ import {
   fork,
   select,
 
-} from "redux-saga/effects";
-import { ServerMessages } from "../enums/enums";
-import { INIT_CONNECTION } from "../store/actions/common";
+} from 'redux-saga/effects';
+import { ServerMessages } from '../enums/enums';
+import { INIT_CONNECTION } from '../store/actions/common';
 import {
   storeSDPAnswer,
   storeSDPOffer,
   storeUserID,
-} from "../store/actions/user";
-import { storePlayers, updateGameMode } from "../store/actions/websocket";
+} from '../store/actions/user';
 
 import {
   startGame,

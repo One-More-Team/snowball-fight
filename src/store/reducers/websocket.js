@@ -1,5 +1,4 @@
 import { connectionState } from '../../enums/enums';
-import { connectionState } from "../../enums/enums";
 import {
   CONNECTED_TO_WS,
   START_GAME,
