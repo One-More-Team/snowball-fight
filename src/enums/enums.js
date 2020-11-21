@@ -15,6 +15,8 @@ const gameModes = {
 const ServerMessages = {
   PLAYERNUM: "playerNum",
   READY: "ready",
+  SEND_WEBRTC_OFFER: "sendWebRTCOffer",
+  SEND_WEBRTC_ANSWER: "sendWebRTCAnswer",
 };
 
 export { connectionState, gameModes, ServerMessages };

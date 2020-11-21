@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import styles from "./game-ui.module.scss";
 import TouchController from "./touch-controller/touch-controller";
+import VoiceCall from "./voice-call/voice-call";
 
 const SHOOT_DELAY_TIME = 3000;
 
@@ -38,6 +39,7 @@ const GameUi = () => {
 
   return (
     <div className={styles.Wrapper}>
+      <VoiceCall />
       <div className={styles.LeftController}>
         <TouchController reportPercentages={reportMovementPercentages} />
       </div>
