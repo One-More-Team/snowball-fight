@@ -1,30 +1,30 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { Route, Switch } from "react-router";
-import { IntlProvider } from "react-intl";
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Route, Switch } from 'react-router';
+import { IntlProvider } from 'react-intl';
+import { BrowserRouter } from 'react-router-dom';
 import {
   GetIsSignInInProgress,
   GetIsSignUpInProgress,
   GetUser,
-} from "./store/selectors/auth";
-import { BrowserRouter } from "react-router-dom";
+} from './store/selectors/auth';
 
-import SignIn from "./components/auth/sign-in/sign-in";
-import SignUp from "./components/auth/sign-up/sign-up";
+import SignIn from './components/auth/sign-in/sign-in';
+import SignUp from './components/auth/sign-up/sign-up';
 
 import {
   GetSiteLanguageId,
   GetSiteLanguageMessages,
-} from "./store/selectors/site-language";
-import Snow from "./components/snow/snow";
-import GameModes from "./components/game-modes/game-modes";
-import { GetIsSiteinited } from "./store/selectors/app";
-import Notification from "./components/notification/notification";
-import "./App.scss";
-import Dialog from "./components/dialog/dialog";
-import { GetConnectionStatus } from "./store/selectors/websocket";
-import { connectionState } from "./enums/enums";
-import GameWrapper from "./components/game-wrapper/game-wrapper";
+} from './store/selectors/site-language';
+import Snow from './components/snow/snow';
+import GameModes from './components/game-modes/game-modes';
+import { GetIsSiteinited } from './store/selectors/app';
+import Notification from './components/notification/notification';
+import './App.scss';
+import Dialog from './components/dialog/dialog';
+import { GetConnectionStatus } from './store/selectors/websocket';
+import { connectionState } from './enums/enums';
+import GameWrapper from './components/game-wrapper/game-wrapper';
 
 const App = () => {
   const user = useSelector(GetUser);
@@ -43,14 +43,16 @@ const App = () => {
     >
       <div
         className={`AppLoader ${
-          isSiteinited && !isSingInInProgress && !isSingUpInProgress && "Loaded"
+          isSiteinited && !isSingInInProgress && !isSingUpInProgress && 'Loaded'
         }`}
       >
-        <i className="fas fa-cog"></i> loading...
+        <i className="fas fa-cog" />
+        {' '}
+        loading...
       </div>
       <Notification />
       <Dialog />
-      <Snow />
+      {connectionStatus !== connectionState.CONNECTION_IN_GAME && <Snow />}
       <BrowserRouter basename="">
         {user ? (
           <>

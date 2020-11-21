@@ -1,15 +1,15 @@
-import { connectionState } from "../../enums/enums";
+import { connectionState } from '../../enums/enums';
 import {
   CONNECTED_TO_WS,
   START_GAME,
   STORE_GAME_MODE,
   STORE_PLAYERS,
   UPDATE_PLAYER_NUMBERS,
-} from "../actions/websocket";
+} from '../actions/websocket';
 
 const initialState = {
   connectionStatus: connectionState.CONNECTION_INITIAL,
-  selectedGameMode: "",
+  selectedGameMode: '',
   gameModeCurrentUsers: 0,
   gameModeMaxUsers: 0,
   players: [],
