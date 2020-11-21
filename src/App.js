@@ -27,7 +27,6 @@ const App = () => {
   const siteLanguageMessages = useSelector(GetSiteLanguageMessages);
   const history = useHistory();
 
-
   setTimeout(() => {
     window.createWorld({
       serverCall: () => console.log,
@@ -36,7 +35,7 @@ const App = () => {
     });
   }, 1000);
 
-  return (
+  /* return (
     <div>
       <canvas
         id="canvas"
@@ -50,7 +49,7 @@ const App = () => {
       />
       <GameUi />
     </div>
-  );
+  ); */
 
   return (
     <IntlProvider

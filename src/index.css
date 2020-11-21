@@ -7,7 +7,7 @@ body {
   overflow: hidden;
   font-family: sans-serif;
   background: url(./asset/back-pattern.png);
-  animation: animation 10s linear infinite;
+  animation: animation 30s linear infinite;
 }
 
 @keyframes animation {
