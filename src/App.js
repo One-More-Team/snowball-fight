@@ -20,12 +20,11 @@ import Snow from "./components/snow/snow";
 import GameModes from "./components/game-modes/game-modes";
 import { GetIsSiteinited } from "./store/selectors/app";
 import Notification from "./components/notification/notification";
-import GameUi from "./game/game-ui";
-
 import "./App.scss";
 import Dialog from "./components/dialog/dialog";
-
-let isWorldCreated = false;
+import { GetConnectionStatus } from "./store/selectors/websocket";
+import { connectionState } from "./enums/enums";
+import GameWrapper from "./components/game-wrapper/game-wrapper";
 
 const App = () => {
   const user = useSelector(GetUser);
@@ -34,35 +33,7 @@ const App = () => {
   const isSiteinited = useSelector(GetIsSiteinited);
   const isSingInInProgress = useSelector(GetIsSignInInProgress);
   const isSingUpInProgress = useSelector(GetIsSignUpInProgress);
-
-  /* if (!isWorldCreated) {
-    isWorldCreated = true;
-    setTimeout(() => {
-      window.createWorld({
-        serverCall: () => console.log,
-        userName: "Krisz",
-        onReady: () => {
-          console.log("CREATED!");
-        },
-      });
-    }, 1000);
-  }
-
-  return (
-    <div>
-      <canvas
-        id="canvas"
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          left: 0,
-          top: 0,
-        }}
-      />
-      <GameUi />
-    </div>
-  ); */
+  const connectionStatus = useSelector(GetConnectionStatus);
 
   return (
     <IntlProvider
@@ -82,11 +53,17 @@ const App = () => {
       <Snow />
       <BrowserRouter basename="">
         {user ? (
-          <Switch>
-            <Route exact path="/" component={GameModes} />
-            <Route exact path="/sign-in" component={GameModes} />
-            <Route exact path="/sign-up" component={GameModes} />
-          </Switch>
+          <>
+            {connectionStatus === connectionState.CONNECTION_IN_GAME ? (
+              <GameWrapper />
+            ) : (
+              <Switch>
+                <Route exact path="/" component={GameModes} />
+                <Route exact path="/sign-in" component={GameModes} />
+                <Route exact path="/sign-up" component={GameModes} />
+              </Switch>
+            )}
+          </>
         ) : (
           <Switch>
             <Route exact path="/" component={SignIn} />
