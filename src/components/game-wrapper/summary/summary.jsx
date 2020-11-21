@@ -24,7 +24,7 @@ const Summary = () => {
       {players.map((data) => (
         <div key={data.id} className={styles.list}>
           <div className={styles['list-name']}>
-            {data.name}
+            {data.userName}
           </div>
           <div className={styles['list-data']}>
             {data.kill}
