@@ -1,28 +1,31 @@
 import { FBXLoader } from "./lib/jsm/loaders/FBXLoader.js";
-import { createWorld } from "./src/physics/physics.js";
+import { createPhysicsWorld } from "./src/physics/physics.js";
 import {
   addUser,
   updateUsers,
   syncOwnUser,
   syncUsers,
   removeUser,
+  getOwnUser,
 } from "./src/user/user-manager.js";
+import { shoot, updateBullets } from "./src/user/bullet-manager.js";
 
 import assetConfig from "./asset-config.js";
-import { teamLevels } from "./level-config.js";
+import { dmLevels, teamLevels } from "./level-config.js";
 import { MobileFPSController } from "./src/mobile-fps-controller.js";
 
-const USE_DEBUG_RENDERER = true;
+const USE_DEBUG_RENDERER = false;
 let debugRenderer = null;
 
 const clock = new THREE.Clock();
 const controller = { movement: { x: 0, y: 0 }, rotation: { x: 0, y: 0 } };
 
-let phisycsWorld;
+let physicsWorld;
 let scene;
 let camera;
 let renderer;
 let controls;
+let bulletManager = null;
 let textureAssets = {};
 
 let _serverCall = (args) => {};
@@ -55,7 +58,7 @@ const initThreeJS = () => {
   renderer.setClearColor(scene.fog.color, 1);
 
   if (USE_DEBUG_RENDERER)
-    debugRenderer = new THREE.CannonDebugRenderer(scene, phisycsWorld);
+    debugRenderer = new THREE.CannonDebugRenderer(scene, physicsWorld);
 };
 
 const loadTextures = (textureConfig, onLoaded) => {
@@ -97,7 +100,7 @@ const createSkyBox = () => {
 const loadLevel = (onLoaded) => {
   var loader = new FBXLoader();
 
-  loader.load(teamLevels.find((level) => level.id === 0).url, (object) => {
+  loader.load(dmLevels.find((level) => level.id === 0).url, (object) => {
     object.traverse(function (child) {
       if (child && child.isMesh) {
         child.castShadow = true;
@@ -136,7 +139,7 @@ const loadLevel = (onLoaded) => {
               )
             );
             body.quaternion.copy(child.quaternion);
-            phisycsWorld.add(body);
+            physicsWorld.add(body);
           }
         }
       }
@@ -164,7 +167,8 @@ const animate = () => {
   let delta = clock.getDelta();
   if (delta > 0.1) delta = 0.1;
 
-  phisycsWorld.step(delta);
+  physicsWorld.step(delta);
+  updateBullets({ scene, physicsWorld });
   updateUsers(delta);
   syncOwnUser({ serverCall: _serverCall, controls });
 
@@ -181,11 +185,11 @@ const animate = () => {
 window.createWorld = ({ serverCall, onReady, userName, id = "ownId" }) => {
   _serverCall = serverCall;
   loadTextures(assetConfig.textures, () => {
-    phisycsWorld = createWorld();
+    physicsWorld = createPhysicsWorld();
     initThreeJS();
     createSkyBox();
     loadLevel(() => {
-      phisycsWorld.add(
+      physicsWorld.add(
         addUser({
           scene,
           id: id,
@@ -193,7 +197,7 @@ window.createWorld = ({ serverCall, onReady, userName, id = "ownId" }) => {
           isOwn: true,
           position: { x: 10, y: 10, z: 10 },
           onComplete: (user) => {
-            controls = new MobileFPSController(camera, user.phisycs, {
+            controls = new MobileFPSController(camera, user.physics, {
               velocityFactor: 0.08,
               sideVelocityFactor: 0.08,
             });
@@ -213,7 +217,7 @@ window.createWorld = ({ serverCall, onReady, userName, id = "ownId" }) => {
               element.requestPointerLock();
             };
           },
-        }).phisycs
+        }).physics
       );
     });
   });
@@ -235,4 +239,8 @@ window.updatePosition = syncUsers;
 window.touchController = {
   movement: { reportPercentages: (v) => (controller.movement = { ...v }) },
   rotation: { reportPercentages: (v) => (controller.rotation = { ...v }) },
+};
+window.actions = {
+  jump: () => controls.jump(),
+  shoot: () => shoot({ user: getOwnUser(), camera, physicsWorld, scene }),
 };

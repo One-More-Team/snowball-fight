@@ -20,9 +20,12 @@ import Snow from "./components/snow/snow";
 import GameModes from "./components/game-modes/game-modes";
 import { GetIsSiteinited } from "./store/selectors/app";
 import Notification from "./components/notification/notification";
+import GameUi from "./game/game-ui";
 
 import "./App.scss";
 import Dialog from "./components/dialog/dialog";
+
+let isWorldCreated = false;
 
 const App = () => {
   const user = useSelector(GetUser);
@@ -32,15 +35,20 @@ const App = () => {
   const isSingInInProgress = useSelector(GetIsSignInInProgress);
   const isSingUpInProgress = useSelector(GetIsSignUpInProgress);
 
-  /* setTimeout(() => {
-    window.createWorld({
-      serverCall: () => console.log,
-      userName: "Krisz",
-      onReady: () => {},
-    });
-  }, 1000); */
+  if (!isWorldCreated) {
+    isWorldCreated = true;
+    setTimeout(() => {
+      window.createWorld({
+        serverCall: () => console.log,
+        userName: "Krisz",
+        onReady: () => {
+          console.log("CREATED!");
+        },
+      });
+    }, 1000);
+  }
 
-  /* return (
+  return (
     <div>
       <canvas
         id="canvas"
@@ -54,7 +62,7 @@ const App = () => {
       />
       <GameUi />
     </div>
-  ); */
+  );
 
   return (
     <IntlProvider

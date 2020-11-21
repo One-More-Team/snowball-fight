@@ -1,4 +1,4 @@
-export const createWorld = () => {
+export const createPhysicsWorld = () => {
   const world = new CANNON.World();
   world.quatNormalizeSkip = 0;
   world.quatNormalizeFast = false;

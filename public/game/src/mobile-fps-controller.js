@@ -47,6 +47,13 @@ export const MobileFPSController = function (
     );
   };
 
+  this.jump = () => {
+    if (canJump === true) {
+      velocity.y = jumpVelocity;
+    }
+    canJump = false;
+  };
+
   var canJump = false;
 
   var contactNormal = new CANNON.Vec3(); // Normal in the contact, pointing *out* of whatever the player touched
@@ -111,10 +118,7 @@ export const MobileFPSController = function (
         break;
 
       case 32: // space
-        if (canJump === true) {
-          velocity.y = jumpVelocity;
-        }
-        canJump = false;
+        jump();
         break;
     }
   };
