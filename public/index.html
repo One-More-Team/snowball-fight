@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
 
     <script src="%PUBLIC_URL%/game/lib/three.min.js"></script>
@@ -18,9 +21,37 @@
       src="https://kit.fontawesome.com/8bba5946ab.js"
       crossorigin="anonymous"
     ></script>
+    <script>
+      window.addEventListener(
+        "orientationchange",
+        function () {
+          if (window.orientation == -90) {
+            document.getElementById("orient").className = "orientright";
+          }
+          if (window.orientation == 90) {
+            document.getElementById("orient").className = "orientleft";
+          }
+          if (window.orientation == 0) {
+            document.getElementById("orient").className = "";
+          }
+        },
+        true
+      );
+    </script>
+    <style>
+      .orientleft #shell {
+        -webkit-transform: rotate(-90deg);
+        -webkit-transform-origin: 160px 160px;
+      }
+
+      .orientright #shell {
+        -webkit-transform: rotate(90deg);
+        -webkit-transform-origin: 230px 230px;
+      }
+    </style>
     <title>Snowball Fight</title>
   </head>
-  <body>
+  <body id="orient">
     <div id="root"></div>
   </body>
 </html>
