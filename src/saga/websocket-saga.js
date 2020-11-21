@@ -26,6 +26,7 @@ import {
   connectedToWS,
   updatePlayerNumbers,
 } from '../store/actions/websocket';
+import { GetUser } from '../store/selectors/auth';
 
 import { GetGameMode } from '../store/selectors/websocket';
 import { info } from '../utils/logger';
@@ -55,9 +56,12 @@ function* connectAndStart({ gameMode }) {
   yield fork(createWebSocket);
   yield take(CONNECTED_TO_WS);
   yield put(updateGameMode(gameMode));
+
+  const user = select(GetUser);
+
   yield call(doSend, {
     header: 'start',
-    data: { gameMode: gameMode.toLowerCase() },
+    data: { gameMode: gameMode.toLowerCase(), userName: user.displayName },
   });
 }
 
@@ -129,16 +133,12 @@ function subscribe(socket) {
   });
 }
 
-function writeToScreen(message) {
-  console.log(`${message}`);
-}
-
 function onClose() {
-  writeToScreen('DISCONNECTED');
+  info('DISCONNECTED');
 }
 
-function onError(evt) {
-  writeToScreen(`ERROR: ${evt.data}`);
+function onError() {
+  info('ERROR');
 }
 
 export function doSend(msgObj) {

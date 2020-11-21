@@ -1,5 +1,6 @@
-import React from "react";
-import GameUi from "../../game/game-ui";
+import React from 'react';
+import GameUi from '../../game/game-ui';
+import Summary from './summary/summary';
 
 // import styles from "./game-wrapper.module.scss";
 
@@ -11,9 +12,9 @@ const GameWrapper = () => {
     setTimeout(() => {
       window.createWorld({
         serverCall: () => console.log,
-        userName: "Krisz",
+        userName: 'Krisz',
         onReady: () => {
-          console.log("CREATED!");
+          console.log('CREATED!');
         },
       });
     }, 1000);
@@ -24,14 +25,15 @@ const GameWrapper = () => {
       <canvas
         id="canvas"
         style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
           left: 0,
           top: 0,
         }}
       />
       <GameUi />
+      <Summary />
     </div>
   );
 };
