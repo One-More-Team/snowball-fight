@@ -1,29 +1,39 @@
 import { connectionState } from "../../enums/enums";
 import { INIT_CONNECTION } from "../actions/common";
-import { CONNECTED_TO_WS, UPDATE_PLAYER_NUMBERS } from "../actions/websocket";
+import {
+  CONNECTED_TO_WS,
+  STORE_GAME_MODE,
+  STORE_PLAYERS,
+  UPDATE_PLAYER_NUMBERS,
+} from "../actions/websocket";
 
 const initialState = {
   connectionStatus: connectionState.CONNECTION_INITIAL,
   selectedGameMode: "",
   gameModeCurrentUsers: 0,
   gameModeMaxUsers: 0,
-  id: "",
+  players: [],
 };
 
 const websocketReducer = (state = initialState, action) => {
   switch (action.type) {
-    case INIT_CONNECTION:
+    case STORE_GAME_MODE:
       return {
         ...state,
-        selectedGameMode: action.payload,
+        selectedGameMode: action.gameMode,
         gameModeCurrentUsers: 0,
         gameModeMaxUsers: 0,
       };
     case UPDATE_PLAYER_NUMBERS:
       return {
         ...state,
-        gameModeCurrentUsers: action.playerInfo.playerNum,
-        gameModeMaxUsers: action.playerInfo.expectedPlayerNum,
+        gameModeCurrentUsers: action.payload.playerNum,
+        gameModeMaxUsers: action.payload.expectedPlayerNum,
+      };
+    case STORE_PLAYERS:
+      return {
+        ...state,
+        players: action.payload,
       };
     case CONNECTED_TO_WS:
       return {

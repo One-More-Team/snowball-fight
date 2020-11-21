@@ -7,7 +7,7 @@ export const initApp = () => {
 };
 
 export const initConnection = (gameMode) => {
-  return { type: INIT_CONNECTION, payload: gameMode };
+  return { type: INIT_CONNECTION, gameMode };
 };
 
 export const changeRoute = (route) => {

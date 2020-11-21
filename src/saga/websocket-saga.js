@@ -1,15 +1,24 @@
 import { eventChannel } from "redux-saga";
-import { call, put, take, delay, takeEvery, fork } from "redux-saga/effects";
+import {
+  call,
+  put,
+  take,
+  delay,
+  takeEvery,
+  fork,
+  select,
+} from "redux-saga/effects";
 import { ServerMessages } from "../enums/enums";
 import { INIT_CONNECTION } from "../store/actions/common";
+import { storeUserID } from "../store/actions/user";
+import { storePlayers, updateGameMode } from "../store/actions/websocket";
 
 import {
   CONNECTED_TO_WS,
-  saveId,
   connectedToWS,
-  saveProducts,
   updatePlayerNumbers,
 } from "../store/actions/websocket";
+import { GetGameMode } from "../store/selectors/websocket";
 import { info } from "../utils/logger";
 
 const INIT = "init";
@@ -20,14 +29,23 @@ const UPDATEPOSITION = "updatePosition";
 const wsUri = "wss://192.168.2.109:8081";
 let websocket;
 
-function* connectAndStart({ payload }) {
+function* connectAndStart({ gameMode }) {
   yield delay(500);
-  info("Game selected:", payload);
+  info("New game selected:", gameMode);
+
+  const prevGameMode = yield select(GetGameMode);
+  info("Previous Game:", prevGameMode);
+  if (prevGameMode != "" && prevGameMode != gameMode) {
+    info("Game change detected -> Closing WSS");
+    yield call(closeWebSocket);
+  }
+
   yield fork(createWebSocket);
   yield take(CONNECTED_TO_WS);
+  yield put(updateGameMode(gameMode));
   yield call(doSend, {
     header: "start",
-    data: { gameMode: payload.toLowerCase() },
+    data: { gameMode: gameMode.toLowerCase() },
   });
 }
 
@@ -65,10 +83,9 @@ function subscribe(socket) {
           emit(updatePlayerNumbers(rawData.data));
           break;
         }
-        case INIT: {
-          emit(saveId(rawData.data.id));
-          emit(saveProducts(rawData.data.shops));
-          window.setShops(rawData.data.shops);
+        case ServerMessages.READY: {
+          emit(storeUserID(rawData.data.id));
+          emit(storePlayers(rawData.data.players));
           break;
         }
         case JOIN: {
@@ -99,6 +116,10 @@ function onClose(evt) {
 
 function onError(evt) {
   writeToScreen(`ERROR: ${evt.data}`);
+}
+
+function closeWebSocket() {
+  websocket.close();
 }
 
 function doSend(msgObj) {
