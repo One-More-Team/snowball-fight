@@ -21,16 +21,12 @@ import {
   updateGameMode,
   CONNECTED_TO_WS,
   connectedToWS,
-  updatePlayerNumbers,
+  updatePlayerNumbers, START_GAME,
 } from '../store/actions/websocket';
 import { GetUser } from '../store/selectors/auth';
 
 import { GetGameMode } from '../store/selectors/websocket';
 import { info } from '../utils/logger';
-
-const JOIN = 'join';
-const LEAVE = 'leave';
-const UPDATEPOSITION = 'updatePosition';
 
 const wsUri = 'wss://192.168.2.109:8081';
 // const wsUri = "wss://snowball-fight.herokuapp.com";
@@ -111,15 +107,6 @@ function subscribe(socket) {
           emit(storeSDPOffer(rawData.data));
           break;
         }
-        case JOIN: {
-          break;
-        }
-        case LEAVE: {
-          break;
-        }
-        case UPDATEPOSITION: {
-          break;
-        }
         default: {
           // todo
         }
@@ -142,8 +129,21 @@ export function doSend(msgObj) {
   websocket.send(JSON.stringify(msgObj));
 }
 
+function* createWorld() {
+  const user = yield select(GetUser);
+
+  yield call(window.createWorld, {
+    serverCall: doSend,
+    userName: user.displayName,
+    onReady: () => {
+      doSend({ header: 'ready' });
+    },
+  });
+}
+
 const WebSocketSaga = [
   takeEvery(INIT_CONNECTION, connectAndStart),
+  takeEvery(START_GAME, createWorld),
   // takeEvery(CONNECTED_TO_WS, showLobby),
 ];
 
