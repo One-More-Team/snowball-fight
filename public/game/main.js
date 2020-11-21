@@ -9,7 +9,7 @@ import {
 } from "./src/user/user-manager.js";
 
 import assetConfig from "./asset-config.js";
-import { MobileFPSController } from "./MobileFPSController.js";
+import { MobileFPSController } from "./src/mobile-fps-controller.js";
 
 const USE_DEBUG_RENDERER = false;
 let debugRenderer = null;
