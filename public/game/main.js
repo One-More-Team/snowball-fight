@@ -9,9 +9,10 @@ import {
 } from "./src/user/user-manager.js";
 
 import assetConfig from "./asset-config.js";
+import { teamLevels } from "./level-config.js";
 import { MobileFPSController } from "./src/mobile-fps-controller.js";
 
-const USE_DEBUG_RENDERER = false;
+const USE_DEBUG_RENDERER = true;
 let debugRenderer = null;
 
 const clock = new THREE.Clock();
@@ -96,9 +97,9 @@ const createSkyBox = () => {
 const loadLevel = (onLoaded) => {
   var loader = new FBXLoader();
 
-  loader.load("./game/game-assets/3d/level-1.fbx", (object) => {
+  loader.load(teamLevels.find((level) => level.id === 0).url, (object) => {
     object.traverse(function (child) {
-      if (child.isMesh) {
+      if (child && child.isMesh) {
         child.castShadow = true;
         child.receiveShadow = true;
 
@@ -109,29 +110,34 @@ const loadLevel = (onLoaded) => {
         } else if (child.name.includes("Rock")) {
           child.material = textureAssets.Rock;
         }
-        if (child.name.includes("Collider")) {
-          child.geometry.computeBoundingBox();
-          var bb = child.geometry.boundingBox;
-          var object3DWidth = bb.max.x - bb.min.x;
-          var object3DHeight = bb.max.y - bb.min.y;
-          var object3DDepth = bb.max.z - bb.min.z;
-          const halfExtents = new CANNON.Vec3(
-            object3DWidth / 2,
-            object3DHeight / 2,
-            object3DDepth / 2
-          );
-          const box = new CANNON.Box(halfExtents);
-          const body = new CANNON.Body({ mass: 0 });
-          body.addShape(box);
-          body.position.copy(
-            new CANNON.Vec3(
-              child.position.x / 100,
-              child.position.y / 100,
-              child.position.z / 100
-            )
-          );
-          body.quaternion.copy(child.quaternion);
-          phisycsWorld.add(body);
+
+        if (child.name.includes("Spawn")) {
+          child.visible = false;
+        } else {
+          if (child.name.includes("Collider")) {
+            child.geometry.computeBoundingBox();
+            var bb = child.geometry.boundingBox;
+            var object3DWidth = bb.max.x - bb.min.x;
+            var object3DHeight = bb.max.y - bb.min.y;
+            var object3DDepth = bb.max.z - bb.min.z;
+            const halfExtents = new CANNON.Vec3(
+              object3DWidth / 2,
+              object3DHeight / 2,
+              object3DDepth / 2
+            );
+            const box = new CANNON.Box(halfExtents);
+            const body = new CANNON.Body({ mass: 0 });
+            body.addShape(box);
+            body.position.copy(
+              new CANNON.Vec3(
+                child.position.x / 100,
+                child.position.y / 100,
+                child.position.z / 100
+              )
+            );
+            body.quaternion.copy(child.quaternion);
+            phisycsWorld.add(body);
+          }
         }
       }
     });
