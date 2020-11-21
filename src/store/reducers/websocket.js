@@ -1,12 +1,6 @@
 import { connectionState } from "../../enums/enums";
 import { INIT_CONNECTION } from "../actions/common";
-import {
-  CONNECTED_TO_WS,
-  ON_SNOW_BALL_READY,
-  SAVE_ID,
-  SAVE_PRODUCTS,
-  UPDATE_PLAYER_NUMBERS,
-} from "../actions/websocket";
+import { CONNECTED_TO_WS, UPDATE_PLAYER_NUMBERS } from "../actions/websocket";
 
 const initialState = {
   connectionStatus: connectionState.CONNECTION_INITIAL,
