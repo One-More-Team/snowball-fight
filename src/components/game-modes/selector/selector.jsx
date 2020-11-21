@@ -26,28 +26,38 @@ const Selector = ({ url }) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.options}>
-        {[gameModes.VERSUS, gameModes.WINGMAN, gameModes.DEATHMATCH].map(
-          (m) => {
-            return (
-              (mode === "" || mode === m) && (
-                <div
-                  key={m}
-                  className={styles.option}
-                  onClick={() => {
-                    onClickHandler(m);
-                  }}
-                >
-                  <FormattedMessage id={m} />
-                  {mode !== "" && (
-                    <div className={styles["game-status"]}>
-                      {currentUser}/{maxUser}
-                    </div>
-                  )}
+        {[
+          { label: gameModes.VERSUS, description: "1vs1" },
+          { label: gameModes.WINGMAN, description: "2vs2" },
+          { label: gameModes.DEATHMATCH, description: "Free for All" },
+        ].map((m) => {
+          return (
+            (mode === "" || mode === m.label) && (
+              <div
+                key={m.label}
+                className={styles.option}
+                onClick={() => {
+                  onClickHandler(m.label);
+                }}
+              >
+                <i className={`far fa-play-circle ${styles.PlayIcon}`}></i>
+                <div className={styles.Label}>
+                  <FormattedMessage id={m.label} />
                 </div>
-              )
-            );
-          }
-        )}
+                <div className={styles.Description}>{m.description}</div>
+                <div className={styles.Stat}>
+                  <div className={styles.Entry}>Wins: 0</div>
+                  <div className={styles.Entry}>Looses: 0</div>
+                </div>
+                {mode !== "" && (
+                  <div className={styles["game-status"]}>
+                    {currentUser}/{maxUser}
+                  </div>
+                )}
+              </div>
+            )
+          );
+        })}
       </div>
     </div>
   );
