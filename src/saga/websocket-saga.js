@@ -105,15 +105,9 @@ function doSend(msgObj) {
   websocket.send(JSON.stringify(msgObj));
 }
 
-function* showLobby() {
-  yield delay(500);
-  info("CHANGING ROUTE TO LOBBY");
-  //yield put(push("/lobby"));
-}
-
 const WebSocketSaga = [
   takeEvery(INIT_CONNECTION, connectAndStart),
-  takeEvery(CONNECTED_TO_WS, showLobby),
+  //takeEvery(CONNECTED_TO_WS, showLobby),
 ];
 
 export default WebSocketSaga;

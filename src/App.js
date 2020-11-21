@@ -19,7 +19,6 @@ import {
 import Snow from "./components/snow/snow";
 import GameModes from "./components/game-modes/game-modes";
 import { GetIsSiteinited } from "./store/selectors/app";
-import Lobby from "./components/lobby/lobby";
 import Notification from "./components/notification/notification";
 
 import "./App.scss";
@@ -79,7 +78,6 @@ const App = () => {
             <Route exact path="/" component={GameModes} />
             <Route exact path="/sign-in" component={GameModes} />
             <Route exact path="/sign-up" component={GameModes} />
-            <Route exact path="/lobby" component={Lobby} />
           </Switch>
         ) : (
           <Switch>

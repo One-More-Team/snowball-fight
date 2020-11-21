@@ -16,6 +16,8 @@ const websocketReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedGameMode: action.payload,
+        gameModeCurrentUsers: 0,
+        gameModeMaxUsers: 0,
       };
     case UPDATE_PLAYER_NUMBERS:
       return {

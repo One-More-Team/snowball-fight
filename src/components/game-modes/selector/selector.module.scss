@@ -6,13 +6,46 @@
   justify-content: space-around;
 }
 
-.game-status {
-  padding-top: 20px;
+.GameStatus {
   display: flex;
-  border-top: 1px solid red;
-  align-items: center;
-  justify-content: space-around;
-  width: 90%;
+  z-index: 1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  .PlayerMarker {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    i {
+      font-size: 2em;
+      opacity: 0.2;
+    }
+  }
+
+  .WaitingForPlayer {
+    background: #000;
+  }
+
+  .ConnectedPlayer {
+    background: #69e879;
+
+    i {
+      opacity: 1;
+      color: #000;
+    }
+
+    .SearchIcon {
+      display: none;
+    }
+  }
 }
 
 .options {
@@ -23,7 +56,7 @@
   justify-content: center;
 }
 
-.option {
+.Option {
   background-color: #fff;
   height: 250px;
   width: 170px;
@@ -38,6 +71,9 @@
   border: 2px solid #fff;
   padding: 20px;
   justify-content: center;
+  transition: width 0.5s;
+  overflow: hidden;
+  position: relative;
 
   .PlayIcon {
     position: absolute;
@@ -46,6 +82,7 @@
     left: 50%;
     font-size: 5em;
     opacity: 0.2;
+    transition: font-size 0.4s;
   }
 
   .Description {
@@ -98,5 +135,51 @@
       font-size: 1.2em;
       margin-right: 30px;
     }
+  }
+}
+
+.SelectedOption {
+  width: 60%;
+
+  .PlayIcon {
+    font-size: 17em;
+  }
+}
+
+.InactiveOption {
+  opacity: 0.2;
+}
+
+.SearchIcon {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  font-size: 1em !important;
+  animation: Search 2s infinite linear;
+  color: #fff;
+  opacity: 1 !important;
+  filter: drop-shadow(2px 4px 6px black);
+}
+
+@keyframes Search {
+  0% {
+    right: -5px;
+    bottom: -5px;
+  }
+  25% {
+    right: 5px;
+    bottom: -5px;
+  }
+  50% {
+    right: 5px;
+    bottom: 5px;
+  }
+  75% {
+    right: -5px;
+    bottom: 5px;
+  }
+  100% {
+    right: -5px;
+    bottom: -5px;
   }
 }

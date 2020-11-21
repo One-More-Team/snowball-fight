@@ -32,30 +32,42 @@ const Selector = ({ url }) => {
           { label: gameModes.DEATHMATCH, description: "Free for All" },
         ].map((m) => {
           return (
-            (mode === "" || mode === m.label) && (
-              <div
-                key={m.label}
-                className={styles.option}
-                onClick={() => {
-                  onClickHandler(m.label);
-                }}
-              >
-                <i className={`far fa-play-circle ${styles.PlayIcon}`}></i>
-                <div className={styles.Label}>
-                  <FormattedMessage id={m.label} />
-                </div>
-                <div className={styles.Description}>{m.description}</div>
-                <div className={styles.Stat}>
-                  <div className={styles.Entry}>Wins: 0</div>
-                  <div className={styles.Entry}>Looses: 0</div>
-                </div>
-                {mode !== "" && (
-                  <div className={styles["game-status"]}>
-                    {currentUser}/{maxUser}
-                  </div>
-                )}
+            <div
+              key={m.label}
+              className={`${styles.Option} ${
+                mode === m.label && styles.SelectedOption
+              } ${mode !== "" && mode !== m.label && styles.InactiveOption}`}
+              onClick={() => {
+                onClickHandler(m.label);
+              }}
+            >
+              <i className={`far fa-play-circle ${styles.PlayIcon}`}></i>
+              <div className={styles.Label}>
+                <FormattedMessage id={m.label} />
               </div>
-            )
+              <div className={styles.Description}>{m.description}</div>
+              {mode === m.label && (
+                <div className={styles.GameStatus}>
+                  {Array.from({ length: maxUser }).map((i, index) => (
+                    <div
+                      key={`index-${index}`}
+                      className={`${styles.PlayerMarker} ${
+                        index >= currentUser
+                          ? styles.WaitingForPlayer
+                          : styles.ConnectedPlayer
+                      }`}
+                    >
+                      <i className="fas fa-user"></i>
+                      <i className={`fas fa-search ${styles.SearchIcon}`}></i>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className={styles.Stat}>
+                <div className={styles.Entry}>Wins: 0</div>
+                <div className={styles.Entry}>Looses: 0</div>
+              </div>
+            </div>
           );
         })}
       </div>
