@@ -1,8 +1,12 @@
 /**
- * @author mrdoob / http://mrdoob.com/
- * @author schteppe / https://github.com/schteppe
+ * Forked from PointerLockControl.js
+ * Optimized for Mobile FPS controller by Krisztian Somoracz
+ * Thanks for the original authors!
+ *
+ * @original author mrdoob / http://mrdoob.com/
+ * @original author schteppe / https://github.com/schteppe
  */
-var PointerLockControls = function (
+export const MobileFPSController = function (
   camera,
   cannonBody,
   { velocityFactor = 0.2, sideVelocityFactor = 0.2, jumpVelocity = 20 }
@@ -19,21 +23,23 @@ var PointerLockControls = function (
 
   var quat = new THREE.Quaternion();
 
-  var moveForward = false;
-  var moveBackward = false;
-  var moveLeft = false;
-  var moveRight = false;
+  let moveForward = false;
+  let moveBackward = false;
+  let moveLeft = false;
+  let moveRight = false;
+  let movementModifier = { x: 0, y: 0 };
 
   this.setMovement = (movement) => {
     moveForward = movement.y > 0;
     moveBackward = movement.y < 0;
     moveLeft = movement.x > 0;
     moveRight = movement.x < 0;
+    movementModifier = movement;
   };
 
   this.setRotation = (rotation) => {
-    yawObject.rotation.y -= -rotation.x * 0.02;
-    pitchObject.rotation.x -= -rotation.y * 0.02;
+    yawObject.rotation.y -= -rotation.x * 0.05;
+    pitchObject.rotation.x -= -rotation.y * 0.05;
 
     pitchObject.rotation.x = Math.max(
       -PI_2,
@@ -159,17 +165,17 @@ var PointerLockControls = function (
     inputVelocity.set(0, 0, 0);
 
     if (moveForward) {
-      inputVelocity.z = -velocityFactor * delta;
+      inputVelocity.z = -velocityFactor * delta * (1 + movementModifier.y);
     }
     if (moveBackward) {
-      inputVelocity.z = velocityFactor * delta;
+      inputVelocity.z = velocityFactor * delta * (1 - movementModifier.y);
     }
 
     if (moveLeft) {
-      inputVelocity.x = -sideVelocityFactor * delta;
+      inputVelocity.x = -sideVelocityFactor * delta * (1 + movementModifier.x);
     }
     if (moveRight) {
-      inputVelocity.x = sideVelocityFactor * delta;
+      inputVelocity.x = sideVelocityFactor * delta * (1 - movementModifier.x);
     }
 
     // Convert velocity to world coordinates
@@ -178,11 +184,14 @@ var PointerLockControls = function (
     euler.order = "XYZ";
     quat.setFromEuler(euler);
     inputVelocity.applyQuaternion(quat);
-    //quat.multiplyVector3(inputVelocity);
 
-    // Add to the object
-    velocity.x += inputVelocity.x;
-    velocity.z += inputVelocity.z;
+    if (movementModifier.x === 0 && movementModifier.y === 0) {
+      velocity.x = 0;
+      velocity.z = 0;
+    } else {
+      velocity.x += inputVelocity.x;
+      velocity.z += inputVelocity.z;
+    }
 
     yawObject.position.copy(cannonBody.position);
   };

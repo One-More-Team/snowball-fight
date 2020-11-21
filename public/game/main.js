@@ -1,3 +1,4 @@
+import { FBXLoader } from "./lib/jsm/loaders/FBXLoader.js";
 import { createWorld } from "./src/physics/physics.js";
 import {
   addUser,
@@ -8,6 +9,7 @@ import {
 } from "./src/user/user-manager.js";
 
 import assetConfig from "./asset-config.js";
+import { MobileFPSController } from "./MobileFPSController.js";
 
 const USE_DEBUG_RENDERER = true;
 let debugRenderer = null;
@@ -91,6 +93,50 @@ const createSkyBox = () => {
   scene.background = textureEquirec;
 };
 
+const loadLevel = (onLoaded) => {
+  var loader = new FBXLoader();
+
+  loader.load("./game/game-assets/3d/level-1.fbx", (object) => {
+    object.traverse(function (child) {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+
+        console.log(child);
+        if (child.name.includes("Collider")) {
+          child.geometry.computeBoundingBox();
+          var bb = child.geometry.boundingBox;
+          var object3DWidth = bb.max.x - bb.min.x;
+          var object3DHeight = bb.max.y - bb.min.y;
+          var object3DDepth = bb.max.z - bb.min.z;
+          const halfExtents = new CANNON.Vec3(
+            object3DWidth / 2,
+            object3DHeight / 2,
+            object3DDepth / 2
+          );
+          const box = new CANNON.Box(halfExtents);
+          const body = new CANNON.Body({ mass: 0 });
+          body.addShape(box);
+          body.position.copy(
+            new CANNON.Vec3(
+              child.position.x / 100,
+              child.position.y / 100,
+              child.position.z / 100
+            )
+          );
+          body.quaternion.copy(child.quaternion);
+          phisycsWorld.add(body);
+        }
+      }
+    });
+
+    object.scale.set(0.01, 0.01, 0.01);
+    scene.add(object);
+
+    onLoaded();
+  });
+};
+
 function init() {
   document.body.appendChild(renderer.domElement);
   window.addEventListener("resize", onWindowResize, false);
@@ -126,36 +172,38 @@ window.createWorld = ({ serverCall, onReady, userName, id = "ownId" }) => {
     phisycsWorld = createWorld();
     initThreeJS();
     createSkyBox();
-    phisycsWorld.add(
-      addUser({
-        scene,
-        id: id,
-        name: userName,
-        isOwn: true,
-        position: { x: 40, y: 0.5, z: 10 },
-        onComplete: (user) => {
-          controls = new PointerLockControls(camera, user.phisycs, {
-            velocityFactor: 0.25,
-            sideVelocityFactor: 0.1,
-          });
-          scene.add(controls.getObject());
-          init();
-          animate();
-          console.log(`Snowball Fight is ready!`);
-          onReady();
-          controls.enabled = true;
+    loadLevel(() => {
+      phisycsWorld.add(
+        addUser({
+          scene,
+          id: id,
+          name: userName,
+          isOwn: true,
+          position: { x: 10, y: 10, z: 10 },
+          onComplete: (user) => {
+            controls = new MobileFPSController(camera, user.phisycs, {
+              velocityFactor: 0.08,
+              sideVelocityFactor: 0.08,
+            });
+            scene.add(controls.getObject());
+            init();
+            animate();
+            console.log(`Snowball Fight is ready!`);
+            onReady();
+            controls.enabled = true;
 
-          var element = document.body;
-          element.onclick = () => {
-            element.requestPointerLock =
-              element.requestPointerLock ||
-              element.mozRequestPointerLock ||
-              element.webkitRequestPointerLock;
-            element.requestPointerLock();
-          };
-        },
-      }).phisycs
-    );
+            var element = document.body;
+            element.onclick = () => {
+              element.requestPointerLock =
+                element.requestPointerLock ||
+                element.mozRequestPointerLock ||
+                element.webkitRequestPointerLock;
+              element.requestPointerLock();
+            };
+          },
+        }).phisycs
+      );
+    });
   });
 };
 

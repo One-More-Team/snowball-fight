@@ -17,6 +17,7 @@ import Button, { ButtonStyle } from "./components/form/button/button";
 import { signOutRequest } from "./store/actions/auth";
 import Snow from "./components/snow/snow";
 import { connectWS } from "./store/actions/websocket";
+import GameUi from "./game/game-ui";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -41,6 +42,31 @@ const App = () => {
       }}
     />
   );*/
+
+  setTimeout(() => {
+    window.createWorld({
+      serverCall: () => console.log,
+      userName: "Krisz",
+      onReady: () => {},
+    });
+  }, 1000);
+
+  return (
+    <div>
+      <canvas
+        id="canvas"
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          left: 0,
+          top: 0,
+        }}
+      />
+      <GameUi />
+    </div>
+  );
+
   return (
     <IntlProvider
       locale={siteLanguageId}
