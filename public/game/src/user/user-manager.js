@@ -84,9 +84,9 @@ export const syncOwnUser = ({ serverCall, controls }) => {
   const now = Date.now();
   if (ownUser && (syncData === null || now - syncData.lastSyncTime > 1000)) {
     const currentPosition = {
-      x: ownUser.phisycs.position.x.toFixed(1),
-      y: ownUser.phisycs.position.y.toFixed(1),
-      z: ownUser.phisycs.position.z.toFixed(1),
+      x: ownUser.physics.position.x.toFixed(1),
+      y: ownUser.physics.position.y.toFixed(1),
+      z: ownUser.physics.position.z.toFixed(1),
     };
     const direction = controls.getDirection();
     const currentRotation = {
@@ -131,3 +131,5 @@ export const removeUser = ({ scene, id }) => {
 
   users = users.filter(({ id }) => id !== id);
 };
+
+export const getOwnUser = () => ownUser;
