@@ -1,0 +1,18 @@
+.Wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.LeftController {
+  flex-grow: 1;
+}
+
+.RightController {
+  flex-grow: 1;
+}
