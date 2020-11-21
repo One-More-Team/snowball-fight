@@ -35,7 +35,7 @@ const App = () => {
   const isSingInInProgress = useSelector(GetIsSignInInProgress);
   const isSingUpInProgress = useSelector(GetIsSignUpInProgress);
 
-  if (!isWorldCreated) {
+  /* if (!isWorldCreated) {
     isWorldCreated = true;
     setTimeout(() => {
       window.createWorld({
@@ -62,7 +62,7 @@ const App = () => {
       />
       <GameUi />
     </div>
-  );
+  ); */
 
   return (
     <IntlProvider
