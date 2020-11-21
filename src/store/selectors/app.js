@@ -1,3 +1,3 @@
-const GetCurrentRoute = (state) => state.appReducer.currentRoute;
+const GetIsSiteinited = (state) => state.appReducer.isSiteinited;
 
-export { GetCurrentRoute };
+export { GetIsSiteinited };

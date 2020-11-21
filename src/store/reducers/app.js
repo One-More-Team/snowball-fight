@@ -1,15 +1,20 @@
-import { CHANGE_ROUTE } from "../actions/common";
+import { SET_USER } from "../actions/auth";
 
 const initialState = {
-  currentRoute: "/",
+  isUserDataLoaded: false,
+  isSiteinited: false,
 };
+
+const getSiteInitedState = ({ state, isUserDataLoaded }) =>
+  state.isUserDataLoaded || isUserDataLoaded;
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
-    case CHANGE_ROUTE:
+    case SET_USER:
       return {
         ...state,
-        currentRoute: action.newRoute,
+        isUserDataLoaded: true,
+        isSiteinited: getSiteInitedState({ state, isUserDataLoaded: true }),
       };
 
     default:
