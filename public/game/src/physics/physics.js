@@ -22,14 +22,5 @@ export const createWorld = () => {
   );
   world.addContactMaterial(physicsContactMaterial);
 
-  const groundShape = new CANNON.Plane();
-  const groundBody = new CANNON.Body({ mass: 0 });
-  groundBody.addShape(groundShape);
-  groundBody.quaternion.setFromAxisAngle(
-    new CANNON.Vec3(1, 0, 0),
-    -Math.PI / 2
-  );
-  world.add(groundBody);
-
   return world;
 };

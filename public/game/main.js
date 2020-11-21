@@ -11,7 +11,7 @@ import {
 import assetConfig from "./asset-config.js";
 import { MobileFPSController } from "./MobileFPSController.js";
 
-const USE_DEBUG_RENDERER = true;
+const USE_DEBUG_RENDERER = false;
 let debugRenderer = null;
 
 const clock = new THREE.Clock();
@@ -102,7 +102,13 @@ const loadLevel = (onLoaded) => {
         child.castShadow = true;
         child.receiveShadow = true;
 
-        console.log(child);
+        if (child.name.includes("Bricks")) {
+          child.material = textureAssets.Bricks;
+        } else if (child.name.includes("Wood")) {
+          child.material = textureAssets.Wood;
+        } else if (child.name.includes("Rock")) {
+          child.material = textureAssets.Rock;
+        }
         if (child.name.includes("Collider")) {
           child.geometry.computeBoundingBox();
           var bb = child.geometry.boundingBox;
