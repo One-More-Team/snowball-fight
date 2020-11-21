@@ -10,4 +10,11 @@
   color: #ffffff;
   text-shadow: aliceblue;
   cursor: pointer;
+  flex-direction: column;
+  padding: 10px;
+
+  i {
+    font-size: 1.5em;
+    margin-top: 10px;
+  }
 }

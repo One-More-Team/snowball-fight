@@ -90,6 +90,7 @@ const SignIn = () => {
             style={ButtonStyle.Primary}
             isLoading={isSignInInProgress}
             autoWidth={false}
+            className={authStyles.Button}
           />
           <span>or</span>
           <Button
@@ -98,6 +99,7 @@ const SignIn = () => {
             style={ButtonStyle.Secondary}
             navigationTarget="sign-up"
             autoWidth={false}
+            className={authStyles.Button}
           />
         </div>
       </form>
