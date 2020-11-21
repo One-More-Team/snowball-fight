@@ -16,6 +16,7 @@ import {
 import Snow from "./components/snow/snow";
 import GameModes from "./components/game-modes/game-modes";
 import { GetIsSiteinited } from "./store/selectors/app";
+import Lobby from "./components/lobby/lobby";
 
 const App = () => {
   const user = useSelector(GetUser);
@@ -59,7 +60,7 @@ const App = () => {
         {user ? (
           <Switch>
             <Route exact path="/" component={GameModes} />
-            <Route exact path="/lobby" component={SignUp} />
+            <Route exact path="/lobby" component={Lobby} />
           </Switch>
         ) : (
           <Switch>
