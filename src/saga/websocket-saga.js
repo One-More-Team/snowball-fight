@@ -24,8 +24,9 @@ import {
   updatePlayerNumbers, START_GAME,
 } from '../store/actions/websocket';
 import { GetUser } from '../store/selectors/auth';
+import { GetIserId } from '../store/selectors/user';
 
-import { GetGameMode } from '../store/selectors/websocket';
+import { GetGameMode, GetPlayers } from '../store/selectors/websocket';
 import { info } from '../utils/logger';
 
 // const wsUri = 'wss://192.168.2.109:8081';
@@ -131,10 +132,14 @@ export function doSend(msgObj) {
 
 function* createWorld() {
   const user = yield select(GetUser);
+  const id = yield select(GetIserId);
+  const playersInfo = yield select(GetPlayers);
 
   yield call(window.createWorld, {
     serverCall: doSend,
     userName: user.displayName,
+    userId: id,
+    players: playersInfo,
     onReady: () => {
       doSend({ header: 'ready' });
     },
