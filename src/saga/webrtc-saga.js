@@ -70,7 +70,7 @@ function* peerConnectionChannelHandler({ eventType, e }) {
 
 function* _startCall(sdp) {
   const constraints = { audio: true, video: false };
-  info(`Start stream process`);
+  info(`MANUAL / Start stream process ${sdp}`);
   try {
     const mediaDevices = yield navigator.mediaDevices.getUserMedia(constraints);
     yield put(saveMediaDevices(mediaDevices));
@@ -134,14 +134,17 @@ function* onIceCandidateChannelHandler(sdp) {
   const isInitedByCurrentUser = yield select(GetIsInitedByCurrentUser);
 
   yield call(doSend, {
-    header: "sendWebRTCOffer",
+    header: isInitedByCurrentUser ? "sendWebRTCOffer" : "sendWebRTCAnswer",
     data: { sdp },
   });
   info(`SDP was saved to database`);
   info(`Secondary stream listener was added`);
-  const answer = yield take(storeSDPAnswer.type);
+  const answer = yield take(storeSDPAnswer);
   info(`Stream request was received`);
-  const desc = new RTCSessionDescription({ type: "answer", sdp: answer.sdp });
+  const desc = new RTCSessionDescription({
+    type: "answer",
+    sdp: answer.payload.sdp,
+  });
   peerConnection.setRemoteDescription(desc).catch(error);
 
   if (!isInitedByCurrentUser) {

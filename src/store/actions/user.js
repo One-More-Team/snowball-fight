@@ -11,10 +11,10 @@ export const storeUserID = (userId) => {
   return { type: STORE_USER_ID, userId };
 };
 
-export const storeSDPOffer = (userId) => {
-  return { type: STORE_SDP_OFFER, userId };
+export const storeSDPOffer = (payload) => {
+  return { type: STORE_SDP_OFFER, payload };
 };
 
-export const storeSDPAnswer = (userId) => {
-  return { type: STORE_SDP_ANSWER, userId };
+export const storeSDPAnswer = (payload) => {
+  return { type: STORE_SDP_ANSWER, payload };
 };

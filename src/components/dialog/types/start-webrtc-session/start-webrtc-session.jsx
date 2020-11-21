@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { /* useDispatch,  */ useSelector } from "react-redux";
 
 import { GetUser } from "../../../../store/selectors/auth";
 import Button, { ButtonStyle } from "../../../form/button/button";
@@ -7,7 +7,7 @@ import Button, { ButtonStyle } from "../../../form/button/button";
 import styles from "./start-webrtc-session.module.scss";
 
 const StartWebRTCSession = ({ close }) => {
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
   const user = useSelector(GetUser);
 
   const startWebRTCSessionRequest = () => {}; //dispatch(startSession());
