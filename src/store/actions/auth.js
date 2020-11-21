@@ -1,5 +1,6 @@
 export const SIGN_UP_REQUEST = "SIGN_UP_REQUEST";
 export const SIGN_IN_REQUEST = "SIGN_IN_REQUEST";
+export const GUEST_SIGN_IN_REQUEST = "GUEST_SIGN_IN_REQUEST";
 export const SIGN_OUT_REQUEST = "SIGN_OUT_REQUEST";
 export const SET_SIGN_UP_ERROR = "SET_SIGN_UP_ERROR";
 export const CLEAR_SIGN_UP_ERROR = "CLEAR_SIGN_UP_ERROR";
@@ -13,6 +14,10 @@ export const signUpRequest = (payload) => {
 
 export const signInRequest = (payload) => {
   return { type: SIGN_IN_REQUEST, payload };
+};
+
+export const guestSignInRequest = () => {
+  return { type: GUEST_SIGN_IN_REQUEST };
 };
 
 export const signOutRequest = () => {

@@ -1,9 +1,12 @@
 import React from "react";
-import "./App.css";
 import { useSelector } from "react-redux";
 import { Route, Switch } from "react-router";
 import { IntlProvider } from "react-intl";
-import { GetUser } from "./store/selectors/auth";
+import {
+  GetIsSignInInProgress,
+  GetIsSignUpInProgress,
+  GetUser,
+} from "./store/selectors/auth";
 import { BrowserRouter } from "react-router-dom";
 
 import SignIn from "./components/auth/sign-in/sign-in";
@@ -17,12 +20,17 @@ import Snow from "./components/snow/snow";
 import GameModes from "./components/game-modes/game-modes";
 import { GetIsSiteinited } from "./store/selectors/app";
 import Lobby from "./components/lobby/lobby";
+import Notification from "./components/notification/notification";
+
+import "./App.scss";
 
 const App = () => {
   const user = useSelector(GetUser);
   const siteLanguageId = useSelector(GetSiteLanguageId);
   const siteLanguageMessages = useSelector(GetSiteLanguageMessages);
   const isSiteinited = useSelector(GetIsSiteinited);
+  const isSingInInProgress = useSelector(GetIsSignInInProgress);
+  const isSingUpInProgress = useSelector(GetIsSignUpInProgress);
 
   /* setTimeout(() => {
     window.createWorld({
@@ -54,12 +62,21 @@ const App = () => {
       messages={siteLanguageMessages}
       onError={() => {}}
     >
-      <div className={`AppLoader ${isSiteinited && "Loaded"}`}>loading...</div>
+      <div
+        className={`AppLoader ${
+          isSiteinited && !isSingInInProgress && !isSingUpInProgress && "Loaded"
+        }`}
+      >
+        <i className="fas fa-cog"></i> loading...
+      </div>
+      <Notification />
       <Snow />
       <BrowserRouter basename="">
         {user ? (
           <Switch>
             <Route exact path="/" component={GameModes} />
+            <Route exact path="/sign-in" component={GameModes} />
+            <Route exact path="/sign-up" component={GameModes} />
             <Route exact path="/lobby" component={Lobby} />
           </Switch>
         ) : (

@@ -6,11 +6,25 @@
   height: 100%;
   background-color: #000;
   color: #fff;
-  transition: all 1s 0.2s;
+  transition: all 0.4s 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1;
+
+  i {
+    margin-right: 5px;
+    animation: Rotate 2s infinite ease;
+  }
+}
+
+@keyframes Rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .Loaded {

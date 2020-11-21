@@ -13,6 +13,7 @@ import IndexSaga from "./saga/index";
 import websocketReducer from "./store/reducers/websocket";
 import appReducer from "./store/reducers/app";
 import userReducer from "./store/reducers/user";
+import notificationReducer from "./store/reducers/notification";
 
 import "./index.css";
 
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   websocketReducer,
   appReducer,
   userReducer,
+  notificationReducer,
 });
 
 const store = createStore(

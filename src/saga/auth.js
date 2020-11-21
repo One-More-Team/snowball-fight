@@ -9,9 +9,11 @@ import {
   setSignInError,
   signOutRequest,
   setUser,
+  guestSignInRequest,
 } from "../store/actions/auth";
 import { initApp } from "../store/actions/common";
 import { USERS } from "../common/database/database";
+import { showNotification } from "../store/actions/notifications";
 
 function* initAppHandler() {
   const channel = yield call(rsf.auth.channel);
@@ -52,15 +54,25 @@ function* _signInRequest(action) {
   try {
     const user = yield rsf.auth.signInWithEmailAndPassword(email, password);
     yield put(setUser(user));
+    yield put(
+      showNotification(`Successful sign in as ${user.user.displayName}`)
+    );
   } catch (e) {
     yield put(setSignInError(e));
   }
+}
+
+function* _guestSignInRequest(action) {
+  const user = yield rsf.auth.signInAnonymously();
+  yield put(setUser(user));
+  yield put(showNotification(`Successful guest sign in`));
 }
 
 function* _signOutRequest() {
   try {
     yield rsf.auth.signOut();
     yield put(setUser(null));
+    yield put(showNotification(`Successful sign out`));
   } catch (e) {
     console.warn("Sign out error!");
   }
@@ -70,6 +82,7 @@ const Auth = [
   takeLatest(initApp().type, initAppHandler),
   takeLatest(signUpRequest().type, _signUpRequest),
   takeLatest(signInRequest().type, _signInRequest),
+  takeLatest(guestSignInRequest().type, _guestSignInRequest),
   takeLatest(signOutRequest().type, _signOutRequest),
 ];
 

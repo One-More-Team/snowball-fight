@@ -57,6 +57,7 @@ const SignIn = () => {
             type="email"
             ref={register({ required: true, maxLength: 250 })}
             onFocus={clearEmailError}
+            autoComplete="on"
           />
           {(errors.email || hasEmailError) && (
             <span className={formStyle.InputError}>

@@ -6,6 +6,7 @@ import {
   CLEAR_SIGN_UP_ERROR,
   SIGN_UP_REQUEST,
   SIGN_IN_REQUEST,
+  GUEST_SIGN_IN_REQUEST,
 } from "../actions/auth";
 
 const initialState = {
@@ -26,6 +27,7 @@ const authReducer = (state = initialState, action) => {
       };
 
     case SIGN_IN_REQUEST:
+    case GUEST_SIGN_IN_REQUEST:
       return {
         ...state,
         isSignInInProgress: true,

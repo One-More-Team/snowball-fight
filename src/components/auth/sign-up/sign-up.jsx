@@ -61,6 +61,7 @@ const SignUp = () => {
                 type="text"
                 ref={register({ required: true, minLength: 3, maxLength: 20 })}
                 onFocus={() => clearErrors(["displayName"])}
+                autoComplete="on"
               />
               {errors.displayName && (
                 <span className={formStyle.InputError}>
@@ -79,6 +80,7 @@ const SignUp = () => {
                 type="email"
                 ref={register({ required: true, maxLength: 250 })}
                 onFocus={clearEmailError}
+                autoComplete="on"
               />
               {(errors.email || hasEmailError) && (
                 <span className={formStyle.InputError}>
