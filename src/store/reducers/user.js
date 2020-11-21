@@ -3,6 +3,7 @@ import { STORE_USER_DATA } from "../actions/user";
 const initialState = {
   wins: 0,
   losses: 0,
+  photoURL: "",
 };
 
 const userReducer = (state = initialState, action) => {

@@ -20,8 +20,14 @@ function* initAppHandler() {
 
   while (true) {
     const { user } = yield take(channel);
-    if (user) yield put(setUser(user));
-    else yield put(setUser(null));
+    if (user) {
+      yield put(setUser(user));
+      yield put(
+        showNotification(
+          `Successful sign in as ${user?.payload?.displayName || "a guest"}`
+        )
+      );
+    } else yield put(setUser(null));
   }
 }
 
@@ -43,6 +49,11 @@ function* _signUpRequest(action) {
     yield call(rsf.auth.updateProfile, userData);
     yield call(rsf.database.create, USERS, userData);
     yield put(setUser({ ...authResult.user }));
+    yield put(
+      showNotification(
+        `Successful sign up as ${authResult.user.user.displayName}`
+      )
+    );
   } catch (e) {
     console.error(`Sign up error: ${e}`);
     yield put(setSignUpError(e));
@@ -65,7 +76,7 @@ function* _signInRequest(action) {
 function* _guestSignInRequest(action) {
   const user = yield rsf.auth.signInAnonymously();
   yield put(setUser(user));
-  yield put(showNotification(`Successful guest sign in`));
+  yield put(showNotification(`Successful sign in as a guest`));
 }
 
 function* _signOutRequest() {

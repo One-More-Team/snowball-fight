@@ -1,3 +1,4 @@
+import md5 from "md5";
 import {
   SET_SIGN_UP_ERROR,
   SET_SIGN_IN_ERROR,
@@ -63,7 +64,20 @@ const authReducer = (state = initialState, action) => {
     case SET_USER:
       return {
         ...state,
-        user: action.payload,
+        user:
+          action.payload === null
+            ? null
+            : {
+                ...action.payload,
+                displayName:
+                  action.payload?.displayName ||
+                  `Guest-${Math.floor(Math.random() * 9999)}`,
+                photoUrl:
+                  action.payload?.photoUrl ||
+                  `https://gravatar.com/avatar/${md5(
+                    action.payload?.uid || "empty"
+                  )}?d=identicon`,
+              },
         isSignInInProgress: false,
         isSignUpInProgress: false,
       };

@@ -1,67 +1,23 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { FormattedMessage } from "react-intl";
+import React from "react";
 
-import { gameModes } from "../../enums/enums";
-import { initConnection } from "../../store/actions/common";
-import {
-  GetGameCurrentUsers,
-  GetGameMaxUsers,
-} from "../../store/selectors/websocket";
-import Button, { ButtonStyle } from "../form/button/button";
-import { signOutRequest } from "../../store/actions/auth";
+import Selector from "./selector/selector";
+import Avatar from "./avatar/avatar";
 
-import style from "./game-modes.module.scss";
+import { useSelector } from "react-redux";
+import { GetUser } from "../../store/selectors/auth";
+
+import styles from "./game-modes.module.scss";
 
 const GameModes = () => {
-  const dispatch = useDispatch();
-  const connectAndStart = (mode) => dispatch(initConnection(mode));
-  const signOut = () => dispatch(signOutRequest());
-
-  const maxUser = useSelector(GetGameMaxUsers);
-  const currentUser = useSelector(GetGameCurrentUsers);
-
-  const [mode, setMode] = useState("");
-
-  const onClickHandler = (m) => {
-    setMode((pre) => m);
-    connectAndStart(m);
-  };
-
+  const { displayName, photoUrl } = useSelector(GetUser);
   return (
-    <div className={style.wrapper}>
-      <Button
-        messageId="sign-out"
-        icon="fa-sign-out-alt"
-        style={ButtonStyle.Secondary}
-        onClick={signOut}
-        autoWidth={false}
-      />
-      <div className={style.options}>
-        {[gameModes.VERSUS, gameModes.WINGMAN, gameModes.DEATHMATCH].map(
-          (m) => {
-            return (
-              (mode === "" || mode === m) && (
-                <div
-                  key={m}
-                  className={style.option}
-                  onClick={() => {
-                    onClickHandler(m);
-                  }}
-                >
-                  <FormattedMessage id={m} />
-                  {mode !== "" && (
-                    <div className={style["game-status"]}>
-                      {currentUser}/{maxUser}
-                    </div>
-                  )}
-                </div>
-              )
-            );
-          }
-        )}
+    <>
+      <div className={styles.UserSection}>
+        <div className={styles.Name}>{displayName}</div>
+        <Avatar photoUrl={photoUrl} />
       </div>
-    </div>
+      <Selector />
+    </>
   );
 };
 
