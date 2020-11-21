@@ -1,31 +1,30 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { Route, Switch } from "react-router";
-import { IntlProvider } from "react-intl";
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Route, Switch } from 'react-router';
+import { IntlProvider } from 'react-intl';
+import { BrowserRouter } from 'react-router-dom';
 import {
   GetIsSignInInProgress,
   GetIsSignUpInProgress,
   GetUser,
-} from "./store/selectors/auth";
-import { BrowserRouter } from "react-router-dom";
+} from './store/selectors/auth';
 
-import SignIn from "./components/auth/sign-in/sign-in";
-import SignUp from "./components/auth/sign-up/sign-up";
+import SignIn from './components/auth/sign-in/sign-in';
+import SignUp from './components/auth/sign-up/sign-up';
 
 import {
   GetSiteLanguageId,
   GetSiteLanguageMessages,
-} from "./store/selectors/site-language";
-import Snow from "./components/snow/snow";
-import GameModes from "./components/game-modes/game-modes";
-import { GetIsSiteinited } from "./store/selectors/app";
-import Notification from "./components/notification/notification";
-import GameUi from "./game/game-ui";
-
-import "./App.scss";
-import Dialog from "./components/dialog/dialog";
-
-let isWorldCreated = false;
+} from './store/selectors/site-language';
+import Snow from './components/snow/snow';
+import GameModes from './components/game-modes/game-modes';
+import { GetIsSiteinited } from './store/selectors/app';
+import Notification from './components/notification/notification';
+import './App.scss';
+import Dialog from './components/dialog/dialog';
+import { GetConnectionStatus } from './store/selectors/websocket';
+import { connectionState } from './enums/enums';
+import GameWrapper from './components/game-wrapper/game-wrapper';
 
 const App = () => {
   const user = useSelector(GetUser);
@@ -34,35 +33,7 @@ const App = () => {
   const isSiteinited = useSelector(GetIsSiteinited);
   const isSingInInProgress = useSelector(GetIsSignInInProgress);
   const isSingUpInProgress = useSelector(GetIsSignUpInProgress);
-
-  /* if (!isWorldCreated) {
-    isWorldCreated = true;
-    setTimeout(() => {
-      window.createWorld({
-        serverCall: () => console.log,
-        userName: "Krisz",
-        onReady: () => {
-          console.log("CREATED!");
-        },
-      });
-    }, 1000);
-  }
-
-  return (
-    <div>
-      <canvas
-        id="canvas"
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          left: 0,
-          top: 0,
-        }}
-      />
-      <GameUi />
-    </div>
-  ); */
+  const connectionStatus = useSelector(GetConnectionStatus);
 
   return (
     <IntlProvider
@@ -72,21 +43,29 @@ const App = () => {
     >
       <div
         className={`AppLoader ${
-          isSiteinited && !isSingInInProgress && !isSingUpInProgress && "Loaded"
+          isSiteinited && !isSingInInProgress && !isSingUpInProgress && 'Loaded'
         }`}
       >
-        <i className="fas fa-cog"></i> loading...
+        <i className="fas fa-cog" />
+        {' '}
+        loading...
       </div>
       <Notification />
       <Dialog />
-      <Snow />
+      {connectionStatus !== connectionState.CONNECTION_IN_GAME && <Snow />}
       <BrowserRouter basename="">
         {user ? (
-          <Switch>
-            <Route exact path="/" component={GameModes} />
-            <Route exact path="/sign-in" component={GameModes} />
-            <Route exact path="/sign-up" component={GameModes} />
-          </Switch>
+          <>
+            {connectionStatus === connectionState.CONNECTION_IN_GAME ? (
+              <GameWrapper />
+            ) : (
+              <Switch>
+                <Route exact path="/" component={GameModes} />
+                <Route exact path="/sign-in" component={GameModes} />
+                <Route exact path="/sign-up" component={GameModes} />
+              </Switch>
+            )}
+          </>
         ) : (
           <Switch>
             <Route exact path="/" component={SignIn} />

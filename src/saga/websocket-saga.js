@@ -1,4 +1,4 @@
-import { eventChannel } from "redux-saga";
+import { eventChannel } from 'redux-saga';
 import {
   call,
   put,
@@ -7,6 +7,7 @@ import {
   takeEvery,
   fork,
   select,
+
 } from "redux-saga/effects";
 import { ServerMessages } from "../enums/enums";
 import { INIT_CONNECTION } from "../store/actions/common";
@@ -18,29 +19,36 @@ import {
 import { storePlayers, updateGameMode } from "../store/actions/websocket";
 
 import {
+  startGame,
+  storePlayers,
+  updateGameMode,
   CONNECTED_TO_WS,
   connectedToWS,
   updatePlayerNumbers,
-} from "../store/actions/websocket";
-import { GetGameMode } from "../store/selectors/websocket";
-import { info } from "../utils/logger";
+} from '../store/actions/websocket';
 
-const INIT = "init";
-const JOIN = "join";
-const LEAVE = "leave";
-const UPDATEPOSITION = "updatePosition";
+import { GetGameMode } from '../store/selectors/websocket';
+import { info } from '../utils/logger';
 
-const wsUri = "wss://192.168.2.109:8081";
+const JOIN = 'join';
+const LEAVE = 'leave';
+const UPDATEPOSITION = 'updatePosition';
+
+const wsUri = 'wss://snowball-fight.herokuapp.com';
 let websocket;
+
+function closeWebSocket() {
+  websocket.close();
+}
 
 function* connectAndStart({ gameMode }) {
   yield delay(500);
-  info("New game selected:", gameMode);
+  info('New game selected:', gameMode);
 
   const prevGameMode = yield select(GetGameMode);
-  info("Previous Game:", prevGameMode);
-  if (prevGameMode != "" && prevGameMode != gameMode) {
-    info("Game change detected -> Closing WSS");
+  info('Previous Game:', prevGameMode);
+  if (prevGameMode !== '' && prevGameMode !== gameMode) {
+    info('Game change detected -> Closing WSS');
     yield call(closeWebSocket);
   }
 
@@ -48,7 +56,7 @@ function* connectAndStart({ gameMode }) {
   yield take(CONNECTED_TO_WS);
   yield put(updateGameMode(gameMode));
   yield call(doSend, {
-    header: "start",
+    header: 'start',
     data: { gameMode: gameMode.toLowerCase() },
   });
 }
@@ -60,7 +68,7 @@ function* createWebSocket() {
 
   const channel = yield call(subscribe, websocket);
   while (true) {
-    let action = yield take(channel);
+    const action = yield take(channel);
 
     yield put(action);
   }
@@ -68,21 +76,21 @@ function* createWebSocket() {
 
 function subscribe(socket) {
   return new eventChannel((emit) => {
-    socket.onopen = (evt) => {
-      info("WS CONNECTED");
+    socket.onopen = () => {
+      info('WS CONNECTED');
       emit(connectedToWS());
     };
 
     socket.onmessage = (evt) => {
-      let rawData = JSON.parse(evt.data);
-      let command = rawData.header;
+      const rawData = JSON.parse(evt.data);
+      const command = rawData.header;
 
       switch (command) {
         case ServerMessages.PLAYERNUM: {
           info(
-            "Player Number Updated ",
+            'Player Number Updated ',
             rawData.data.playerNum,
-            rawData.data.expectedPlayerNum
+            rawData.data.expectedPlayerNum,
           );
           emit(updatePlayerNumbers(rawData.data));
           break;
@@ -90,6 +98,8 @@ function subscribe(socket) {
         case ServerMessages.READY: {
           emit(storeUserID(rawData.data.id));
           emit(storePlayers(rawData.data.players));
+          emit(storePlayers(rawData.data.players));
+          emit(startGame());
           break;
         }
         case ServerMessages.SEND_WEBRTC_ANSWER: {
@@ -110,6 +120,7 @@ function subscribe(socket) {
           break;
         }
         default: {
+          // todo
         }
       }
     };
@@ -122,16 +133,12 @@ function writeToScreen(message) {
   console.log(`${message}`);
 }
 
-function onClose(evt) {
-  writeToScreen("DISCONNECTED");
+function onClose() {
+  writeToScreen('DISCONNECTED');
 }
 
 function onError(evt) {
   writeToScreen(`ERROR: ${evt.data}`);
-}
-
-function closeWebSocket() {
-  websocket.close();
 }
 
 export function doSend(msgObj) {
@@ -140,7 +147,7 @@ export function doSend(msgObj) {
 
 const WebSocketSaga = [
   takeEvery(INIT_CONNECTION, connectAndStart),
-  //takeEvery(CONNECTED_TO_WS, showLobby),
+  // takeEvery(CONNECTED_TO_WS, showLobby),
 ];
 
 export default WebSocketSaga;
