@@ -6,15 +6,20 @@ import { closeDialog } from "../../store/actions/dialog";
 import Profile from "./types/profile/profile";
 
 import styles from "./dialog.module.scss";
+import StartWebRTCSession from "./types/start-webrtc-session/start-webrtc-session";
 
 export const DIALOG_ID = {
   PROFILE: "PROFILE",
+  START_WEBRTC_SESSION: "START_WEBRTC_SESSION",
 };
 
 const getDialog = ({ dialogId, close }) => {
   switch (dialogId) {
     case DIALOG_ID.PROFILE:
       return <Profile close={close} />;
+
+    case DIALOG_ID.START_WEBRTC_SESSION.PROFILE:
+      return <StartWebRTCSession close={close} />;
 
     default:
       return <div />;

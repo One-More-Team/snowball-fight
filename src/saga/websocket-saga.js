@@ -10,7 +10,11 @@ import {
 } from "redux-saga/effects";
 import { ServerMessages } from "../enums/enums";
 import { INIT_CONNECTION } from "../store/actions/common";
-import { storeUserID } from "../store/actions/user";
+import {
+  storeSDPAnswer,
+  storeSDPOffer,
+  storeUserID,
+} from "../store/actions/user";
 import { storePlayers, updateGameMode } from "../store/actions/websocket";
 
 import {
@@ -88,6 +92,14 @@ function subscribe(socket) {
           emit(storePlayers(rawData.data.players));
           break;
         }
+        case ServerMessages.SEND_WEBRTC_ANSWER: {
+          emit(storeSDPAnswer(rawData));
+          break;
+        }
+        case ServerMessages.SEND_WEBRTC_OFFER: {
+          emit(storeSDPOffer(rawData));
+          break;
+        }
         case JOIN: {
           break;
         }
@@ -122,7 +134,7 @@ function closeWebSocket() {
   websocket.close();
 }
 
-function doSend(msgObj) {
+export function doSend(msgObj) {
   websocket.send(JSON.stringify(msgObj));
 }
 

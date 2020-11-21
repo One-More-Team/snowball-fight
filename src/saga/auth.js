@@ -44,7 +44,7 @@ function* _signUpRequest(action) {
       uid: authResult.user.uid,
       displayName,
       photoURL: `https://gravatar.com/avatar/${md5(email)}?d=identicon`,
-      userType: "student",
+      userType: "normal",
     };
     yield call(rsf.auth.updateProfile, userData);
     yield call(rsf.database.create, USERS, userData);

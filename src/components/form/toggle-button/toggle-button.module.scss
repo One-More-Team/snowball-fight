@@ -1,0 +1,23 @@
+.Wrapper {
+  background: #fff;
+  width: 60px;
+  height: 30px;
+  border-radius: 15px;
+  position: relative;
+  padding: 2px;
+
+  .Marker {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #999;
+    transition: right 0.2s;
+    position: absolute;
+    right: calc(100% - 28px);
+  }
+
+  .ActiveMarker {
+    right: 2px;
+    background: #4957f7;
+  }
+}

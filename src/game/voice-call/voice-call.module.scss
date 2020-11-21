@@ -1,0 +1,14 @@
+.Wrapper {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(0px 4px 6px #00000055);
+
+  i {
+    color: #fff;
+    margin-right: 5px;
+    font-size: 1.3em;
+  }
+}

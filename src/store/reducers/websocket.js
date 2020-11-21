@@ -1,5 +1,4 @@
 import { connectionState } from "../../enums/enums";
-import { INIT_CONNECTION } from "../actions/common";
 import {
   CONNECTED_TO_WS,
   STORE_GAME_MODE,

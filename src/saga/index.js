@@ -4,6 +4,7 @@ import { initApp } from "../store/actions/common";
 import Auth from "./auth";
 import User from "./user";
 import WebSocketSaga from "./websocket-saga";
+import WebRTCSaga from "./webrtc-saga";
 import Notification from "./notification";
 
 function* initialCall() {
@@ -11,7 +12,13 @@ function* initialCall() {
 }
 
 function* Index() {
-  yield all([...Auth, ...User, ...WebSocketSaga, ...Notification]);
+  yield all([
+    ...Auth,
+    ...User,
+    ...WebSocketSaga,
+    ...WebRTCSaga,
+    ...Notification,
+  ]);
   yield call(initialCall);
 }
 

@@ -1,0 +1,21 @@
+h1 {
+  margin-top: 0;
+  color: #fff;
+  text-align: center;
+
+  .Name {
+    color: #ffff00;
+    font-weight: bold;
+  }
+}
+
+.Actions {
+  margin-top: 20px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+
+  .Action {
+    margin: 5px;
+  }
+}
