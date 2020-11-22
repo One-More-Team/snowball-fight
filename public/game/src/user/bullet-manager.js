@@ -1,6 +1,6 @@
 const ballShape = new CANNON.Sphere(0.15);
 const ballGeometry = new THREE.SphereGeometry(ballShape.radius, 16, 16);
-const shootVelo = 15;
+const shootVelo = 18;
 const characterRadius = 1;
 const directionVector = new THREE.Vector3();
 const material = new THREE.MeshLambertMaterial({ color: 0xdddddd });

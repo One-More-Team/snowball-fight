@@ -1,0 +1,13 @@
+.Loader {
+  margin-right: 5px;
+  animation: Rotate 2s infinite ease;
+}
+
+@keyframes Rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

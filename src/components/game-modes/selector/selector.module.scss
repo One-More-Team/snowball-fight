@@ -31,7 +31,7 @@
   }
 
   .WaitingForPlayer {
-    background: #000;
+    background: var(--colors-1);
   }
 
   .ConnectedPlayer {
@@ -39,7 +39,7 @@
 
     i {
       opacity: 1;
-      color: #000;
+      color: var(--colors-1);
     }
 
     .SearchIcon {
@@ -57,18 +57,18 @@
 }
 
 .Option {
-  background-color: #fff;
+  background-color: var(--colors-0);
   height: 250px;
   width: 170px;
   display: flex;
   align-items: center;
-  color: #ffffff;
+  color: var(--colors-0);
   cursor: pointer;
   border-radius: 20px;
   flex-direction: column;
   margin: 0 20px;
   filter: drop-shadow(0px 4px 6px #00000055);
-  border: 2px solid #fff;
+  border: 2px solid var(--colors-0);
   padding: 20px;
   justify-content: center;
   transition: width 0.5s;
@@ -156,7 +156,7 @@
   bottom: -5px;
   font-size: 1em !important;
   animation: Search 2s infinite linear;
-  color: #fff;
+  color: var(--colors-0);
   opacity: 1 !important;
   filter: drop-shadow(2px 4px 6px black);
   -webkit-backface-visibility: hidden;
@@ -186,4 +186,9 @@
     right: -5px;
     bottom: -5px;
   }
+}
+
+.Loader {
+  margin-right: 5px;
+  font-size: 1.5em;
 }

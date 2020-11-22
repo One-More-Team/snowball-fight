@@ -11,7 +11,6 @@ export const MobileFPSController = function (
   cannonBody,
   { velocityFactor = 0.2, sideVelocityFactor = 0.2, jumpVelocity = 20 }
 ) {
-  var eyeYPos = 2; // eyes are 2 meters above the ground
   var scope = this;
 
   var pitchObject = new THREE.Object3D();

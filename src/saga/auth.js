@@ -24,7 +24,9 @@ function* initAppHandler() {
       yield put(setUser(user));
       yield put(
         showNotification(
-          `Successful sign in as ${user?.payload?.displayName || "a guest"}`
+          `Successful sign in as ${
+            user?.payload?.displayName || user?.displayName || "a guest"
+          }`
         )
       );
     } else yield put(setUser(null));
