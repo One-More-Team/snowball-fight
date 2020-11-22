@@ -42,7 +42,11 @@ const Selector = () => {
   ));
 
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={`${styles.wrapper} ${
+        maxUser === currentUser && currentUser > 0 && styles.ReadyForGame
+      }`}
+    >
       <div className={styles.options}>
         {[
           { label: gameModes.VERSUS, description: "1vs1" },
