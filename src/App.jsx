@@ -54,7 +54,7 @@ const App = () => {
     const timer = setInterval(dispatchMeasure, MeasureTime);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [dispatch]);
 
   return (
     <IntlProvider
