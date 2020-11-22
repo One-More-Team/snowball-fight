@@ -6,7 +6,6 @@ import {
   syncOwnUser,
   removeUser,
   getOwnUser,
-  syncUserPosition,
 } from "./src/user/user-manager.js";
 import {
   shoot,
