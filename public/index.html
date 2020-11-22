@@ -17,16 +17,16 @@
       src="https://kit.fontawesome.com/8bba5946ab.js"
       crossorigin="anonymous"
     ></script>
+    <script>
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > window.innerHeight) {
+          document.getElementById("orient").className = "";
+        } else if (window.innerWidth < window.innerHeight) {
+          document.getElementById("orient").className = "wrongOrientation";
+        } else document.getElementById("orient").className = "";
+      });
+    </script>
     <style>
-      @supports (padding: max(0px)) {
-        body,
-        header,
-        footer {
-          padding-left: min(0vmin, env(safe-area-inset-left));
-          padding-right: min(0vmin, env(safe-area-inset-right));
-        }
-      }
-
       #orient {
         display: none;
         position: absolute;
@@ -37,12 +37,10 @@
         align-items: center;
         justify-content: center;
         z-index: 999;
-        pointer-events: none;
       }
-      @media screen and (orientation: landscape) {
-        #orient {
-          display: none;
-        }
+
+      .wrongOrientation {
+        display: flex;
       }
     </style>
     <meta

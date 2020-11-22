@@ -11,11 +11,7 @@ import {
 import { ServerMessages } from "../enums/enums";
 import { INIT_CONNECTION } from "../store/actions/common";
 import { showNotification } from "../store/actions/notifications";
-import {
-  storeSDPAnswer,
-  storeSDPOffer,
-  storeUserID,
-} from "../store/actions/user";
+import { storeSDPAnswer, storeUserID } from "../store/actions/user";
 import {
   storeCountDown,
   startGame,
@@ -32,8 +28,8 @@ import { GetIserId } from "../store/selectors/user";
 import { GetGameMode, GetPlayers } from "../store/selectors/websocket";
 import { info } from "../utils/logger";
 
-// const wsUri = "wss://192.168.2.109:8081";
-const wsUri = "wss://snowball-fight.herokuapp.com";
+const wsUri = "wss://192.168.2.109:8081";
+//const wsUri = "wss://snowball-fight.herokuapp.com";
 let websocket;
 
 function closeWebSocket() {
@@ -111,8 +107,14 @@ function subscribe(socket) {
           emit(storeSDPAnswer(rawData.data));
           break;
         }
-        case ServerMessages.SEND_WEBRTC_OFFER: {
-          emit(storeSDPOffer(rawData.data));
+        case ServerMessages.RESPAWN: {
+          if (rawData.data?.targetName && rawData.data?.killerName)
+            emit(
+              showNotification(
+                `${rawData.data.targetName} was killed by ${rawData.data.killerName}`
+              )
+            );
+          window.serverMessage(rawData);
           break;
         }
         default: {

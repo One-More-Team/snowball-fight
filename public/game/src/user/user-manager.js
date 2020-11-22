@@ -155,6 +155,7 @@ export const removeUser = ({ scene, id }) => {
 };
 
 export const getOwnUser = () => ownUser;
+export const getUsers = () => users;
 
 export const setUserPosition = (pos) => {
   ownUser.physics.position.x = pos.x / 100;

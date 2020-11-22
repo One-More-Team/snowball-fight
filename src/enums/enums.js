@@ -18,6 +18,7 @@ const ServerMessages = {
   COUNTDOWN: "countdown",
   SEND_WEBRTC_OFFER: "sendWebRTCOffer",
   SEND_WEBRTC_ANSWER: "sendWebRTCAnswer",
+  RESPAWN: "respawn",
 };
 
 export { connectionState, gameModes, ServerMessages };

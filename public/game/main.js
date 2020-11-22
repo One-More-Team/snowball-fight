@@ -8,12 +8,14 @@ import {
   getOwnUser,
   syncUser,
   setUserPosition,
+  getUsers,
 } from "./src/user/user-manager.js";
 import {
   shoot,
   updateBullets,
   syncBulletPosition,
   syncOwnBullet,
+  getBullets,
 } from "./src/user/bullet-manager.js";
 
 import assetConfig from "./asset-config.js";
@@ -186,7 +188,7 @@ const createPlayers = (players, onComplete) => {
       addUser({
         scene,
         id: player.id,
-        name: player.name,
+        name: player.userName,
         isOwn: player.id === _ownId,
         position: { ...spawnPoints[player.spawnIndex] },
         kill: player.kill,
@@ -209,6 +211,45 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+const checkCollisions = ({ users, bullets }) => {
+  const markedUsers = [];
+  const markedBullets = [];
+  if (users && users.length > 0 && bullets && bullets.length > 0)
+    users.forEach((user) => {
+      if (user.object && user.object.visible)
+        bullets.forEach((bullet) => {
+          if (bullet.mesh.visible && user.object && bullet.body) {
+            const userPosition = user.object.position;
+            const bulletPosition = bullet.body.position;
+            if (
+              userPosition.x - bulletPosition.x < 0.1 &&
+              userPosition.y - bulletPosition.y < 0.1 &&
+              userPosition.z - bulletPosition.z < 0.1
+            ) {
+              markedUsers.push(user);
+              markedBullets.push(bullet);
+            }
+          }
+        });
+    });
+
+  markedUsers.forEach((user) => {
+    user.object.visible = false;
+    _serverCall({
+      header: "respawn",
+      data: {
+        id: user.id,
+        targetName: user.name,
+        killerName: getOwnUser().name,
+      },
+    });
+  });
+
+  markedBullets.forEach((bullet) => {
+    bullet.mesh.visible = false;
+  });
+};
+
 const animate = () => {
   let delta = clock.getDelta();
   if (delta > 0.1) delta = 0.1;
@@ -221,6 +262,7 @@ const animate = () => {
     serverCall: _serverCall,
     isStarted: sharedData.state !== STATE.WAITING_FOR_START,
   });
+  checkCollisions({ users: getUsers(), bullets: getBullets() });
 
   controls.setMovement(controller.movement);
   controls.setRotation(controller.rotation);
@@ -318,6 +360,20 @@ window.serverMessage = ({ header, data }) => {
       if (data.type === "user") syncUser(data);
       if (data.type === "bullet") syncBulletPosition({ ...data, scene });
       break;
+
+    case "respawn":
+      const user = getUsers().find((u) => u.id === data.id);
+      if (user) {
+        if (user.object) user.object.visible = true;
+        const spawnPoint = spawnPoints[data.spawnIndex];
+        if (user.id === getOwnUser().id) {
+          setUserPosition(spawnPoint);
+        } else {
+          user.object.position.x = spawnPoint.x / 100;
+          user.object.position.y = spawnPoint.y / 100;
+          user.object.position.z = spawnPoint.z / 100;
+        }
+      }
 
     default:
   }

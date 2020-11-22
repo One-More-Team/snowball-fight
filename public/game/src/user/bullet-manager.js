@@ -144,3 +144,5 @@ export const syncOwnBullet = ({ serverCall, isStarted }) => {
     }
   });
 };
+
+export const getBullets = () => balls;

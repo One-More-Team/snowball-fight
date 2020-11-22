@@ -14,7 +14,7 @@ const ToggleButton = ({ onChange, externalValue }) => {
   }, [externalValue]);
 
   return (
-    <div className={styles.Wrapper} onClick={toggle}>
+    <div className={styles.Wrapper} onTouchStart={toggle}>
       <div
         className={`${styles.Marker} ${isActive && styles.ActiveMarker}`}
       ></div>
