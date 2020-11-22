@@ -54,7 +54,7 @@ export const syncUser = ({ id, position, rotation }) => {
 
     if (positionDiff > 0.01)
       setAnimationAction({ user, animation: ANIMATION.WALK });
-    /*
+
     if (user.animationTimeout) clearTimeout(user.animationTimeout);
     if (user.positionTween) user.positionTween.kill();
     user.positionTween = gsap.to(user.object.position, {
@@ -72,16 +72,18 @@ export const syncUser = ({ id, position, rotation }) => {
 
     gsap.to(user, {
       targetRotation: rotation,
+      duration: 0.2,
+      ease: "linear",
       onUpdate: () => {
         var euler = new THREE.Euler(
-          0, //rotation.x,
-          rotation.y + Math.PI,
-          0, //rotation.z,
+          rotation.x,
+          rotation.y - Math.PI,
+          rotation.z,
           "XYZ"
         );
         user.object.quaternion.setFromEuler(euler);
       },
-    }); */
+    });
   }
 };
 
@@ -102,7 +104,7 @@ export const syncOwnUser = ({ serverCall, controls }) => {
   if (
     _sharedData.state !== STATE.WAITING_FOR_START &&
     ownUser &&
-    (syncData === null || now - syncData.lastSyncTime > 1000)
+    (syncData === null || now - syncData.lastSyncTime > 100)
   ) {
     const currentPosition = {
       x: ownUser.physics.position.x.toFixed(1),

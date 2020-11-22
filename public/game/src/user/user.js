@@ -14,17 +14,15 @@ export const create = ({ id, name, position, isOwn, scene, onComplete }) => {
   if (!isOwn) {
     objLoader.load("../../game/game-assets/3d/character/ybot.fbx", (o) => {
       object = o;
-      object.scale.set(0.1, 0.1, 0.1);
+      object.scale.set(0.01, 0.01, 0.01);
       object.position.set(position.x, position.y - 1, position.z);
       scene.add(object);
-      /* mixer = new AnimationMixer(object);
-
+      mixer = new AnimationMixer(object);
       objLoader.load(
         "../../game/game-assets/3d/animation/Walking.fbx",
         (animation) => {
           const walkAnimationAction = mixer.clipAction(animation.animations[0]);
           animations[ANIMATION.WALK] = walkAnimationAction;
-
           objLoader.load(
             "../../game/game-assets/3d/animation/Idle.fbx",
             (animation) => {
@@ -41,11 +39,10 @@ export const create = ({ id, name, position, isOwn, scene, onComplete }) => {
                   id,
                   name,
                   position,
-                  object: isOwn ? null : object,
-                  physics: isOwn ? body : null,
+                  object: object,
+                  physics: null,
                   mixer,
-                  hasAnimation: !isOwn,
-                  mixer: "",
+                  hasAnimation: true,
                   activeAnimation: "",
                   animations,
                   targetRotation: 0,
@@ -53,7 +50,7 @@ export const create = ({ id, name, position, isOwn, scene, onComplete }) => {
             }
           );
         }
-      ); */
+      );
     });
   } else {
     const mass = 5;
