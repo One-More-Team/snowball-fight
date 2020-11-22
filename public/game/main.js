@@ -272,16 +272,16 @@ window.createWorld = ({
 };
 
 window.addUsers = (users) => {
-  users.forEach(({ id, name, position }) =>
+  users.forEach(({ id, name, position }) => {
     addUser({
       scene,
-      id: id,
-      name: name,
+      id,
+      name,
       isOwn: false,
-      position: position,
+      position,
       sharedData,
-    })
-  );
+    });
+  });
 };
 window.removeUser = (id) => removeUser({ scene, id });
 window.touchController = {
@@ -308,3 +308,5 @@ window.serverMessage = ({ header, data }) => {
     default:
   }
 };
+
+document.addEventListener('touchmove',function(e) {e.preventDefault()}, {passive:false});

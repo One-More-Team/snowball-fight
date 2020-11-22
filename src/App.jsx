@@ -42,10 +42,16 @@ const App = () => {
   const connectionStatus = useSelector(GetConnectionStatus);
 
   useEffect(() => {
-    dispatch(measure(MeasureTime));
-    const timer = setInterval(() => {
-      dispatch(measure(MeasureTime));
-    }, MeasureTime);
+    let timestamp = 0;
+    const dispatchMeasure = () => {
+      const elapsedTime = performance.now() - timestamp;
+      timestamp = performance.now();
+
+      dispatch(measure(elapsedTime));
+    };
+
+    dispatchMeasure();
+    const timer = setInterval(dispatchMeasure, MeasureTime);
 
     return () => clearInterval(timer);
   }, []);
