@@ -1,33 +1,35 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Route, Switch } from 'react-router';
-import { IntlProvider } from 'react-intl';
-import { BrowserRouter } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Route, Switch } from "react-router";
+import { IntlProvider } from "react-intl";
+import { BrowserRouter } from "react-router-dom";
 
 import {
   GetIsSignInInProgress,
   GetIsSignUpInProgress,
   GetUser,
-} from './store/selectors/auth';
+} from "./store/selectors/auth";
 
-import SignIn from './components/auth/sign-in/sign-in';
-import SignUp from './components/auth/sign-up/sign-up';
+import SignIn from "./components/auth/sign-in/sign-in";
+import SignUp from "./components/auth/sign-up/sign-up";
 
 import {
   GetSiteLanguageId,
   GetSiteLanguageMessages,
-} from './store/selectors/site-language';
+} from "./store/selectors/site-language";
 
-import Snow from './components/snow/snow';
-import GameModes from './components/game-modes/game-modes';
-import { GetIsSiteinited } from './store/selectors/app';
-import Notification from './components/notification/notification';
-import './App.scss';
-import Dialog from './components/dialog/dialog';
-import { GetConnectionStatus } from './store/selectors/websocket';
-import { connectionState } from './enums/enums';
-import GameWrapper from './components/game-wrapper/game-wrapper';
-import {measure} from "./store/actions/performance";
+import Snow from "./components/snow/snow";
+import GameModes from "./components/game-modes/game-modes";
+import { GetIsSiteinited } from "./store/selectors/app";
+import Notification from "./components/notification/notification";
+import Dialog from "./components/dialog/dialog";
+import { GetConnectionStatus } from "./store/selectors/websocket";
+import { connectionState } from "./enums/enums";
+import GameWrapper from "./components/game-wrapper/game-wrapper";
+import { measure } from "./store/actions/performance";
+import Loader from "./components/spinner/loader";
+
+import "./App.scss";
 
 const MeasureTime = 5000;
 
@@ -64,12 +66,10 @@ const App = () => {
     >
       <div
         className={`AppLoader ${
-          isSiteinited && !isSingInInProgress && !isSingUpInProgress && 'Loaded'
+          isSiteinited && !isSingInInProgress && !isSingUpInProgress && "Loaded"
         }`}
       >
-        <i className="fas fa-cog" />
-        {' '}
-        loading...
+        <Loader /> loading...
       </div>
       <Notification />
       <Dialog />

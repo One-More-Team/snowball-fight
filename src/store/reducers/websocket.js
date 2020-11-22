@@ -5,31 +5,16 @@ import {
   STORE_GAME_MODE,
   STORE_PLAYERS,
   UPDATE_PLAYER_NUMBERS,
-} from '../actions/websocket';
-import { connectionState } from '../../enums/enums';
+} from "../actions/websocket";
+import { connectionState } from "../../enums/enums";
 
 const initialState = {
   connectionStatus: connectionState.CONNECTION_INITIAL,
-  selectedGameMode: '',
+  selectedGameMode: "",
   gameModeCurrentUsers: 0,
   gameModeMaxUsers: 0,
   countdown: 0,
-  players: [
-    {
-      spawnIndex: 0,
-      id: 0,
-      userName: 'Test Elek',
-      kill: 1,
-      die: 2,
-    },
-    {
-      spawnIndex: 5,
-      id: 1,
-      userName: 'Homeless Couple',
-      kill: 3,
-      die: 4,
-    },
-  ],
+  players: [],
 };
 
 const websocketReducer = (state = initialState, action) => {

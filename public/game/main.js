@@ -7,11 +7,13 @@ import {
   removeUser,
   getOwnUser,
   syncUser,
+  setUserPosition,
 } from "./src/user/user-manager.js";
 import {
   shoot,
   updateBullets,
   syncBulletPosition,
+  syncOwnBullet,
 } from "./src/user/bullet-manager.js";
 
 import assetConfig from "./asset-config.js";
@@ -43,6 +45,7 @@ const sharedData = {
 };
 
 let _ownId = "";
+let _gameMode = "";
 let _serverCall = (args) => {};
 
 const initThreeJS = () => {
@@ -116,7 +119,9 @@ const loadLevel = (onLoaded) => {
   var loader = new FBXLoader();
   spawnPoints = [];
 
-  loader.load(dmLevels.find((level) => level.id === 0).url, (object) => {
+  const levelList = _gameMode === "team" ? teamLevels : dmLevels;
+
+  loader.load(levelList.find((level) => level.id === 0).url, (object) => {
     object.traverse(function (child) {
       if (child && child.isMesh) {
         child.castShadow = true;
@@ -176,7 +181,7 @@ const loadLevel = (onLoaded) => {
 const createPlayers = (players, onComplete) => {
   players.forEach((player) => {
     if (player.id === _ownId) {
-      // set pos { ...spawnPoints[player.spawnIndex] },
+      setUserPosition(spawnPoints[player.spawnIndex]);
     } else {
       addUser({
         scene,
@@ -212,6 +217,10 @@ const animate = () => {
   updateBullets({ scene, physicsWorld });
   updateUsers(delta);
   syncOwnUser({ serverCall: _serverCall, controls });
+  syncOwnBullet({
+    serverCall: _serverCall,
+    isStarted: sharedData.state !== STATE.WAITING_FOR_START,
+  });
 
   controls.setMovement(controller.movement);
   controls.setRotation(controller.rotation);
@@ -240,6 +249,7 @@ window.createWorld = ({
   userId = "ownId",
 }) => {
   _ownId = userId;
+  _gameMode = players.length === 4 ? "deathMatch" : "team";
   _serverCall = serverCall;
   sharedData.state = STATE.WAITING_FOR_START;
 
@@ -306,11 +316,17 @@ window.serverMessage = ({ header, data }) => {
 
     case "updatePosition":
       if (data.type === "user") syncUser(data);
-      if (data.type === "bullet") syncBulletPosition(data);
+      if (data.type === "bullet") syncBulletPosition({ ...data, scene });
       break;
 
     default:
   }
 };
 
-document.addEventListener('touchmove',function(e) {e.preventDefault()}, {passive:false});
+document.addEventListener(
+  "touchmove",
+  function (e) {
+    e.preventDefault();
+  },
+  { passive: false }
+);

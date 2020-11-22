@@ -28,6 +28,12 @@ const authReducer = (state = initialState, action) => {
       };
 
     case SIGN_IN_REQUEST:
+      return {
+        ...state,
+        isSignInInProgress: true,
+        signInError: null,
+      };
+
     case GUEST_SIGN_IN_REQUEST:
       return {
         ...state,

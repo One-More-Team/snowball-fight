@@ -1,14 +1,13 @@
 .wrapper {
   position: absolute;
-  width: 30%;
-  height: 30%;
+  width: 20%;
   background-color: white;
   opacity: 0.6;
   border: 3px solid red;
   border-radius: 0 25px 25px 25px;
   padding: 10px;
-  top: 150px;
-  left: 50px;
+  top: 50px;
+  left: 40px;
   z-index: 999;
   display: flex;
   align-items: center;
@@ -34,4 +33,18 @@
 .list-data {
   text-align: center;
   width: 25%;
+}
+
+.statcontainer {
+  position: absolute;
+  top: 55px;
+  left: 10px;
+  cursor: pointer;
+  background-color: blue;
+}
+
+.stat {
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
 }

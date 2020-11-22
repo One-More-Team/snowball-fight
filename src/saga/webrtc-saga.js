@@ -1,6 +1,7 @@
 import { eventChannel } from "redux-saga";
 import {
   call,
+  fork,
   put,
   select,
   take,
@@ -15,10 +16,10 @@ import {
   stopCall,
 } from "../store/actions/webrtc-actions";
 import { error, info } from "../utils/logger";
-import { initApp } from "../store/actions/common";
 import { doSend } from "./websocket-saga";
 import { storeSDPAnswer, storeSDPOffer } from "../store/actions/user";
 import { GetIsInitedByCurrentUser } from "../store/selectors/webrtc-selector";
+import { showNotification } from "../store/actions/notifications";
 
 const servers = [
   { urls: "stun:stun.l.google.com:19302" },
@@ -33,13 +34,18 @@ const servers = [
 let peerConnection = null;
 let dataChannel = null;
 
-function* _initApp() {
+function* initPeerConnection() {
   const serverId = Math.floor(Math.random() * servers.length);
   const server = servers[serverId];
   info(`Selected Stun server: ${server.urls}`);
   peerConnection = new RTCPeerConnection({
     iceServers: [server],
   });
+
+  yield call(addPeerConnectionListener);
+}
+
+function* addPeerConnectionListener() {
   const peerConnectionChannel = eventChannel((emit) => {
     peerConnection.onaddstream = (e) => emit({ eventType: "onaddstream", e });
     peerConnection.ondatachannel = (e) =>
@@ -69,8 +75,9 @@ function* peerConnectionChannelHandler({ eventType, e }) {
 }
 
 function* _startCall(sdp) {
+  yield fork(initPeerConnection);
   const constraints = { audio: true, video: false };
-  info(`MANUAL / Start stream process ${sdp}`);
+  info(`Manual stream start process: ${sdp}`);
   try {
     const mediaDevices = yield navigator.mediaDevices.getUserMedia(constraints);
     yield put(saveMediaDevices(mediaDevices));
@@ -99,7 +106,9 @@ function* _startCall(sdp) {
       yield peerConnection
         .createOffer()
         .then((d) => peerConnection.setLocalDescription(d));
-      info(`Local description was added peer connection`);
+      info(
+        `Local description was added to peer connection (Inited by current user)`
+      );
     } else {
       var desc = new RTCSessionDescription({ type: "offer", sdp });
       peerConnection
@@ -107,7 +116,9 @@ function* _startCall(sdp) {
         .then(() => peerConnection.createAnswer())
         .then((d) => peerConnection.setLocalDescription(d))
         .catch(error);
-      info(`Local description was added ro connection`);
+      info(
+        `Local description was added to peer connection (Inited by other user)`
+      );
     }
 
     const onIceCandidateChannel = eventChannel((emit) => {
@@ -157,8 +168,10 @@ function* _stopCall() {
 }
 
 function* _storeSDPOffer(action) {
+  yield fork(initPeerConnection);
   const constraints = { audio: true, video: false };
-  info(`Start stream process`);
+  info(`Auto stream start process: ${action.payload}`);
+  yield put(showNotification(`Voice chat activation in progress...`));
   try {
     const mediaDevices = yield navigator.mediaDevices.getUserMedia(constraints);
     yield put(saveMediaDevices(mediaDevices));
@@ -207,7 +220,6 @@ function* _storeSDPOffer(action) {
 }
 
 const Stream = [
-  takeLatest(initApp().type, _initApp),
   takeLatest(startCall().type, _startCall),
   takeLatest(stopCall().type, _stopCall),
   takeLatest(storeSDPOffer().type, _storeSDPOffer),

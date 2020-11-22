@@ -8,6 +8,7 @@ import {
   GetGameMaxUsers,
   GetGameMode,
 } from "../../../store/selectors/websocket";
+import Loader from "../../spinner/loader";
 
 import styles from "./selector.module.scss";
 
@@ -27,8 +28,25 @@ const Selector = () => {
       connectAndStart(m);
     }
   };
+
+  const userList = Array.from({ length: maxUser }).map((i, index) => (
+    <div
+      key={`index-${index}`}
+      className={`${styles.PlayerMarker} ${
+        index >= currentUser ? styles.WaitingForPlayer : styles.ConnectedPlayer
+      }`}
+    >
+      <i className="fas fa-user"></i>
+      <i className={`fas fa-search ${styles.SearchIcon}`}></i>
+    </div>
+  ));
+
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={`${styles.wrapper} ${
+        maxUser === currentUser && currentUser > 0 && styles.ReadyForGame
+      }`}
+    >
       <div className={styles.options}>
         {[
           { label: gameModes.VERSUS, description: "1vs1" },
@@ -52,19 +70,11 @@ const Selector = () => {
               <div className={styles.Description}>{m.description}</div>
               {mode === m.label && (
                 <div className={styles.GameStatus}>
-                  {Array.from({ length: maxUser }).map((i, index) => (
-                    <div
-                      key={`index-${index}`}
-                      className={`${styles.PlayerMarker} ${
-                        index >= currentUser
-                          ? styles.WaitingForPlayer
-                          : styles.ConnectedPlayer
-                      }`}
-                    >
-                      <i className="fas fa-user"></i>
-                      <i className={`fas fa-search ${styles.SearchIcon}`}></i>
-                    </div>
-                  ))}
+                  {maxUser === 0 ? (
+                    <Loader className={styles.Loader} />
+                  ) : (
+                    userList
+                  )}
                 </div>
               )}
               <div className={styles.Stat}>

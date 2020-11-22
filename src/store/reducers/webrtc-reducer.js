@@ -39,14 +39,14 @@ const webRTCReducer = (state = initialState, action) => {
       return {
         ...state,
         mediaDevices: action.payload,
-        state: STREAM_STATE.IN_PROGRESS,
-        startTime: window.performance.now(),
       };
 
     case SAVE_INNER_STREAM:
       return {
         ...state,
+        state: STREAM_STATE.IN_PROGRESS,
         innerStream: action.payload,
+        startTime: window.performance.now(),
       };
 
     default:

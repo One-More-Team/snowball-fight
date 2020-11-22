@@ -11,7 +11,6 @@ export const MobileFPSController = function (
   cannonBody,
   { velocityFactor = 0.2, sideVelocityFactor = 0.2, jumpVelocity = 20 }
 ) {
-  var eyeYPos = 2; // eyes are 2 meters above the ground
   var scope = this;
 
   var pitchObject = new THREE.Object3D();
@@ -38,8 +37,8 @@ export const MobileFPSController = function (
   };
 
   this.setRotation = (rotation) => {
-    yawObject.rotation.y -= -rotation.x * 0.05;
-    pitchObject.rotation.x -= -rotation.y * 0.05;
+    yawObject.rotation.y -= -rotation.x * 0.03;
+    pitchObject.rotation.x -= -rotation.y * 0.03;
 
     pitchObject.rotation.x = Math.max(
       -PI_2,
