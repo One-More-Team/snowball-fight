@@ -3,10 +3,18 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./game-ui.module.scss";
 import TouchController from "./touch-controller/touch-controller";
 import VoiceCall from "./voice-call/voice-call";
+import Stats from "../components/performance/stat.jsx";
+import { useSelector } from "react-redux";
+import {
+  GetFPSStats,
+  GetMemoryStats,
+  GetRenderTimeStats,
+} from "../store/selectors/performance";
 
 const SHOOT_DELAY_TIME = 1000;
 
 const GameUi = () => {
+  const [showStats, setShowStats] = useState(false);
   const shootFiller = useRef();
   const [lastShootTime, setLastShootTime] = useState(0);
 
@@ -31,12 +39,18 @@ const GameUi = () => {
 
   const jumpRequest = () => window.actions.jump();
 
+  const toggleStats = () => setShowStats((prev) => !prev);
+
   useEffect(() => {
     const interval = setInterval(calculateShootPercentage, 50);
     return () => {
       clearInterval(interval);
     };
   });
+
+  const memoryStats = useSelector(GetMemoryStats);
+  const fpsStats = useSelector(GetFPSStats);
+  const renderTimeStats = useSelector(GetRenderTimeStats);
 
   return (
     <div className={styles.Wrapper}>
@@ -55,6 +69,37 @@ const GameUi = () => {
         <div className={styles.Jump} onTouchStart={jumpRequest}>
           <i className="fas fa-angle-double-up"></i>
         </div>
+      </div>
+      <div className={styles.Stats} onTouchStart={toggleStats}>
+        <i className="fas fa-info-circle"></i>
+        {showStats && (
+          <div className={styles.StatsList}>
+            <Stats
+              width={200}
+              height={100}
+              label={"Memory"}
+              maxValueNum={10}
+              maxValue={10}
+              values={memoryStats}
+            />
+            <Stats
+              width={200}
+              height={100}
+              label={"FPS"}
+              maxValueNum={10}
+              maxValue={10}
+              values={fpsStats}
+            />
+            <Stats
+              width={200}
+              height={100}
+              label={"Render Time"}
+              maxValueNum={10}
+              maxValue={10}
+              values={renderTimeStats}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
