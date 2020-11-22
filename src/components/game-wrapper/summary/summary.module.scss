@@ -7,13 +7,12 @@
   border-radius: 0 25px 25px 25px;
   padding: 10px;
   top: 50px;
-  left: 10px;
+  left: 40px;
   z-index: 999;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  pointer-events: none;
 }
 
 .list-header {
@@ -34,4 +33,18 @@
 .list-data {
   text-align: center;
   width: 25%;
+}
+
+.statcontainer {
+  position: absolute;
+  top: 55px;
+  left: 10px;
+  cursor: pointer;
+  background-color: blue;
+}
+
+.stat {
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
 }
