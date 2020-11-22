@@ -22,13 +22,14 @@ import Snow from "./components/snow/snow";
 import GameModes from "./components/game-modes/game-modes";
 import { GetIsSiteinited } from "./store/selectors/app";
 import Notification from "./components/notification/notification";
-import "./App.scss";
 import Dialog from "./components/dialog/dialog";
 import { GetConnectionStatus } from "./store/selectors/websocket";
 import { connectionState } from "./enums/enums";
 import GameWrapper from "./components/game-wrapper/game-wrapper";
 import { measure } from "./store/actions/performance";
 import Loader from "./components/spinner/loader";
+
+import "./App.scss";
 
 const MeasureTime = 5000;
 
