@@ -6,9 +6,13 @@ import {
   syncOwnUser,
   removeUser,
   getOwnUser,
-  syncUserPosition
+  syncUserPosition,
 } from "./src/user/user-manager.js";
-import { shoot, updateBullets, syncBulletPosition } from "./src/user/bullet-manager.js";
+import {
+  shoot,
+  updateBullets,
+  syncBulletPosition,
+} from "./src/user/bullet-manager.js";
 
 import assetConfig from "./asset-config.js";
 import { dmLevels, teamLevels } from "./level-config.js";
@@ -35,7 +39,7 @@ let textureAssets = {};
 let spawnPoints = [];
 
 const sharedData = {
-  state: STATE.WAITING_FOR_START
+  state: STATE.WAITING_FOR_START,
 };
 
 let _ownId = "";
@@ -283,7 +287,7 @@ window.actions = {
 
 // data gets an extra id param automatically by the server
 window.serverMessage = ({ header, data }) => {
-  switch(header) {
+  switch (header) {
     case "start":
       sharedData.state = STATE.IN_PROGRESS;
       break;
@@ -293,6 +297,6 @@ window.serverMessage = ({ header, data }) => {
       if (data.type === "bullet") syncBulletPosition(data);
       break;
 
-    default
+    default:
   }
 };
