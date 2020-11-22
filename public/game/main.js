@@ -175,7 +175,12 @@ const animate = () => {
   controls.setMovement(controller.movement);
   controls.setRotation(controller.rotation);
   controls.update(delta * 1000);
+
+  performance.mark("threejs-render-start-mark");
   renderer.render(scene, camera);
+  performance.mark("threejs-render-end-mark");
+
+  performance.measure("threejs-render-measure", "threejs-render-start-mark", "threejs-render-end-mark");
 
   if (USE_DEBUG_RENDERER) debugRenderer.update();
 

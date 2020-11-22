@@ -15,6 +15,7 @@ import appReducer from "./store/reducers/app";
 import userReducer from "./store/reducers/user";
 import notificationReducer from "./store/reducers/notification";
 import dialogReducer from "./store/reducers/dialog";
+import performanceReducer from "./store/reducers/performance";
 
 import "./index.css";
 
@@ -39,6 +40,7 @@ const rootReducer = combineReducers({
   userReducer,
   notificationReducer,
   dialogReducer,
+  performanceReducer,
 });
 
 const store = createStore(
