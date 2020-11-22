@@ -10,6 +10,7 @@ import {
 } from "redux-saga/effects";
 import { ServerMessages } from "../enums/enums";
 import { INIT_CONNECTION } from "../store/actions/common";
+import { showNotification } from "../store/actions/notifications";
 import {
   storeSDPAnswer,
   storeSDPOffer,
@@ -140,6 +141,8 @@ function* createWorld() {
   const user = yield select(GetUser);
   const id = yield select(GetIserId);
   const playersInfo = yield select(GetPlayers);
+
+  yield put(showNotification(`Players found, prepare yourself!`));
 
   yield delay(1000);
   yield call(window.createWorld, {

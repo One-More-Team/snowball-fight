@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import styles from "./toggle-button.module.scss";
 
-const ToggleButton = ({ onChange }) => {
-  const [isActive, setIsActive] = useState(false);
+const ToggleButton = ({ onChange, externalValue }) => {
+  const [isActive, setIsActive] = useState(externalValue || false);
   const toggle = () => {
     if (onChange) onChange(!isActive);
     setIsActive(!isActive);
   };
+
+  useEffect(() => {
+    setIsActive(externalValue);
+  }, [externalValue]);
 
   return (
     <div className={styles.Wrapper} onClick={toggle}>
