@@ -28,8 +28,8 @@ import { GetIserId } from "../store/selectors/user";
 import { GetGameMode, GetPlayers } from "../store/selectors/websocket";
 import { info } from "../utils/logger";
 
-const wsUri = "wss://192.168.2.109:8081";
-//const wsUri = "wss://snowball-fight.herokuapp.com";
+//const wsUri = "wss://192.168.2.109:8081";
+const wsUri = "wss://snowball-fight.herokuapp.com";
 let websocket;
 
 function closeWebSocket() {
