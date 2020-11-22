@@ -1,15 +1,13 @@
 import {
-    RECORD_FPS,
-    RECORD_MEMORY_USAGE,
-    RECORD_DATA_TRANSFER,
+  MEASURE,
 } from "../actions/performance";
 
 const maxSampleNum = 10;
 
 const initialState = {
-  fpsRecords: [],
-  memoryUsageRecors: [],
-  dataTransferRecords: [],
+  memoryUsageList: [],
+  fpsList: [],
+  renderingTimeList: [],
 };
 
 const addNewSample = (sampleList, sample) => {
@@ -19,26 +17,37 @@ const addNewSample = (sampleList, sample) => {
   if (sampleList.length > maxSampleNum) {
     sampleList.shift();
   }
+
+  return sampleList;
 }
 
-const performanceReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case RECORD_FPS:
-      return {
-        ...state,
-        fpsRecords: addNewSample(state.fpsRecords, action.fps),
-      }
+const performanceReducer = (state = initialState, {type, payload}) => {
+  switch (type) {
+    case MEASURE:
+      const memoryUsage = {
+        jsHeapSizeLimit: performance.memory.jsHeapSizeLimit,
+        totalJSHeapSize: performance.memory.totalJSHeapSize,
+        usedJSHeapSize: performance.memory.usedJSHeapSize,
+      };
+      const measurementList = performance.getEntriesByName('threejs-render-measure');
+      const fps = measurementList.length / (payload.elapsedTime / 1000);
+      const avarageRenderingTime = measurementList
+        .map(performanceMeasure => performanceMeasure.duration)
+        .reduce((sum, val) => (sum + val) / measurementList.length, 0);
 
-    case RECORD_MEMORY_USAGE:
-      return {
-        ...state,
-        memoryUsageRecors: addNewSample(state.memoryUsageRecors, action.memoryUsage),
-      }
+      performance.clearMarks('threejs-render-start-mark');
+      performance.clearMarks('threejs-render-end-mark');
+      performance.clearMeasures('threejs-render-measure');
 
-    case RECORD_DATA_TRANSFER:
+      console.log(JSON.stringify(memoryUsage));
+      console.log(`fps: ${fps}`);
+      console.log(`avarageRenderingTime: ${avarageRenderingTime}`);
+
       return {
         ...state,
-        dataTransferRecords: addNewSample(state.dataTransferRecords, action.dataTransfer),
+        memoryUsageList: addNewSample(state.memoryUsageList, memoryUsage),
+        fpsList: addNewSample(state.fpsList, fps),
+        renderingTimeList: addNewSample(state.renderingTimeList, avarageRenderingTime),
       }
 
     default:

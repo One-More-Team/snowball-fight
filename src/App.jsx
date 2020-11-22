@@ -1,8 +1,9 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router';
 import { IntlProvider } from 'react-intl';
 import { BrowserRouter } from 'react-router-dom';
+
 import {
   GetIsSignInInProgress,
   GetIsSignUpInProgress,
@@ -16,6 +17,7 @@ import {
   GetSiteLanguageId,
   GetSiteLanguageMessages,
 } from './store/selectors/site-language';
+
 import Snow from './components/snow/snow';
 import GameModes from './components/game-modes/game-modes';
 import { GetIsSiteinited } from './store/selectors/app';
@@ -25,8 +27,12 @@ import Dialog from './components/dialog/dialog';
 import { GetConnectionStatus } from './store/selectors/websocket';
 import { connectionState } from './enums/enums';
 import GameWrapper from './components/game-wrapper/game-wrapper';
+import {measure} from "./store/actions/performance";
+
+const MeasureTime = 5000;
 
 const App = () => {
+  const dispatch = useDispatch();
   const user = useSelector(GetUser);
   const siteLanguageId = useSelector(GetSiteLanguageId);
   const siteLanguageMessages = useSelector(GetSiteLanguageMessages);
@@ -34,6 +40,15 @@ const App = () => {
   const isSingInInProgress = useSelector(GetIsSignInInProgress);
   const isSingUpInProgress = useSelector(GetIsSignUpInProgress);
   const connectionStatus = useSelector(GetConnectionStatus);
+
+  useEffect(() => {
+    dispatch(measure(MeasureTime));
+    const timer = setInterval(() => {
+      dispatch(measure(MeasureTime));
+    }, MeasureTime);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <IntlProvider

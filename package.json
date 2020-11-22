@@ -5,6 +5,7 @@
   "dependencies": {
     "@sentry/react": "^5.27.3",
     "@sentry/tracing": "^5.27.3",
+    "chalk": "2.4.2",
     "emoji-mart": "^3.0.0",
     "firebase": "^7.22.0",
     "md5": "2.3.0",
