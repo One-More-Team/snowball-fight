@@ -72,34 +72,36 @@ const GameUi = () => {
       </div>
       <div className={styles.Stats} onTouchStart={toggleStats}>
         <i className="fas fa-info-circle"></i>
-        {showStats && (
-          <div className={styles.StatsList}>
-            <Stats
-              width={200}
-              height={100}
-              label={"Memory"}
-              maxValueNum={10}
-              maxValue={80}
-              values={memoryStats}
-            />
-            <Stats
-              width={200}
-              height={100}
-              label={"FPS"}
-              maxValueNum={10}
-              maxValue={60}
-              values={fpsStats}
-            />
-            <Stats
-              width={200}
-              height={100}
-              label={"Render t."}
-              maxValueNum={10}
-              maxValue={40}
-              values={renderTimeStats}
-            />
-          </div>
-        )}
+        <div
+          className={`${styles.StatsList} ${
+            !showStats && styles.HideStatsList
+          }`}
+        >
+          <Stats
+            width={200}
+            height={100}
+            label={"Memory"}
+            maxValueNum={10}
+            maxValue={80}
+            values={memoryStats}
+          />
+          <Stats
+            width={200}
+            height={100}
+            label={"FPS"}
+            maxValueNum={10}
+            maxValue={60}
+            values={fpsStats}
+          />
+          <Stats
+            width={200}
+            height={100}
+            label={"Render t."}
+            maxValueNum={10}
+            maxValue={40}
+            values={renderTimeStats}
+          />
+        </div>
       </div>
     </div>
   );
