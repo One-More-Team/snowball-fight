@@ -1,4 +1,4 @@
-import { eventChannel } from "redux-saga";
+import { eventChannel } from 'redux-saga';
 import {
   call,
   put,
@@ -7,48 +7,57 @@ import {
   takeEvery,
   fork,
   select,
-} from "redux-saga/effects";
-import { ServerMessages } from "../enums/enums";
-import { INIT_CONNECTION } from "../store/actions/common";
-import { storeUserID } from "../store/actions/user";
+} from 'redux-saga/effects';
+import { ServerMessages } from '../enums/enums';
+import { INIT_CONNECTION } from '../store/actions/common';
 import {
+  storeSDPAnswer,
+  storeSDPOffer,
+  storeUserID,
+} from '../store/actions/user';
+import {
+  storeCountDown,
   startGame,
   storePlayers,
   updateGameMode,
-} from "../store/actions/websocket";
-
-import {
   CONNECTED_TO_WS,
   connectedToWS,
-  updatePlayerNumbers,
-} from "../store/actions/websocket";
-import { GetGameMode } from "../store/selectors/websocket";
-import { info } from "../utils/logger";
+  updatePlayerNumbers, START_GAME,
+} from '../store/actions/websocket';
+import { GetUser } from '../store/selectors/auth';
+import { GetIserId } from '../store/selectors/user';
 
-const JOIN = "join";
-const LEAVE = "leave";
-const UPDATEPOSITION = "updatePosition";
+import { GetGameMode, GetPlayers } from '../store/selectors/websocket';
+import { info } from '../utils/logger';
 
-const wsUri = "wss://snowball-fight.herokuapp.com";
+// const wsUri = 'wss://192.168.2.109:8081';
+const wsUri = 'wss://snowball-fight.herokuapp.com';
 let websocket;
+
+function closeWebSocket() {
+  websocket.close();
+}
 
 function* connectAndStart({ gameMode }) {
   yield delay(500);
-  info("New game selected:", gameMode);
+  info('New game selected:', gameMode);
 
   const prevGameMode = yield select(GetGameMode);
-  info("Previous Game:", prevGameMode);
-  if (prevGameMode !== "" && prevGameMode !== gameMode) {
-    info("Game change detected -> Closing WSS");
+  info('Previous Game:', prevGameMode);
+  if (prevGameMode !== '' && prevGameMode !== gameMode) {
+    info('Game change detected -> Closing WSS');
     yield call(closeWebSocket);
   }
 
   yield fork(createWebSocket);
   yield take(CONNECTED_TO_WS);
   yield put(updateGameMode(gameMode));
+
+  const user = yield select(GetUser);
+  info('disply name', user.displayName);
   yield call(doSend, {
-    header: "start",
-    data: { gameMode: gameMode.toLowerCase() },
+    header: 'start',
+    data: { gameMode: gameMode.toLowerCase(), userName: user.displayName },
   });
 }
 
@@ -59,7 +68,7 @@ function* createWebSocket() {
 
   const channel = yield call(subscribe, websocket);
   while (true) {
-    let action = yield take(channel);
+    const action = yield take(channel);
 
     yield put(action);
   }
@@ -68,20 +77,20 @@ function* createWebSocket() {
 function subscribe(socket) {
   return new eventChannel((emit) => {
     socket.onopen = () => {
-      info("WS CONNECTED");
+      info('WS CONNECTED');
       emit(connectedToWS());
     };
 
     socket.onmessage = (evt) => {
-      let rawData = JSON.parse(evt.data);
-      let command = rawData.header;
+      const rawData = JSON.parse(evt.data);
+      const command = rawData.header;
 
       switch (command) {
         case ServerMessages.PLAYERNUM: {
           info(
-            "Player Number Updated ",
+            'Player Number Updated ',
             rawData.data.playerNum,
-            rawData.data.expectedPlayerNum
+            rawData.data.expectedPlayerNum,
           );
           emit(updatePlayerNumbers(rawData.data));
           break;
@@ -89,21 +98,23 @@ function subscribe(socket) {
         case ServerMessages.READY: {
           emit(storeUserID(rawData.data.id));
           emit(storePlayers(rawData.data.players));
-          emit(storePlayers(rawData.data.players));
           emit(startGame());
           break;
         }
-        case JOIN: {
+        case ServerMessages.COUNTDOWN: {
+          emit(storeCountDown(rawData.data));
           break;
         }
-        case LEAVE: {
+        case ServerMessages.SEND_WEBRTC_ANSWER: {
+          emit(storeSDPAnswer(rawData.data));
           break;
         }
-        case UPDATEPOSITION: {
+        case ServerMessages.SEND_WEBRTC_OFFER: {
+          emit(storeSDPOffer(rawData.data));
           break;
         }
         default: {
-          // todo
+          window.serverMessage(rawData);
         }
       }
     };
@@ -112,29 +123,38 @@ function subscribe(socket) {
   });
 }
 
-function writeToScreen(message) {
-  console.log(`${message}`);
-}
-
 function onClose() {
-  writeToScreen("DISCONNECTED");
+  info('DISCONNECTED');
 }
 
-function onError(evt) {
-  writeToScreen(`ERROR: ${evt.data}`);
+function onError() {
+  info('ERROR');
 }
 
-function closeWebSocket() {
-  websocket.close();
-}
-
-function doSend(msgObj) {
+export function doSend(msgObj) {
   websocket.send(JSON.stringify(msgObj));
+}
+
+function* createWorld() {
+  const user = yield select(GetUser);
+  const id = yield select(GetIserId);
+  const playersInfo = yield select(GetPlayers);
+
+  yield call(window.createWorld, {
+    serverCall: doSend,
+    userName: user.displayName,
+    userId: id,
+    players: playersInfo,
+    onReady: () => {
+      doSend({ header: 'ready' });
+    },
+  });
 }
 
 const WebSocketSaga = [
   takeEvery(INIT_CONNECTION, connectAndStart),
-  //takeEvery(CONNECTED_TO_WS, showLobby),
+  takeEvery(START_GAME, createWorld),
+  // takeEvery(CONNECTED_TO_WS, showLobby),
 ];
 
 export default WebSocketSaga;

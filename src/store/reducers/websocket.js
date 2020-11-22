@@ -1,22 +1,44 @@
-import { connectionState } from "../../enums/enums";
 import {
   CONNECTED_TO_WS,
   START_GAME,
+  STORE_COUNTDOWN,
   STORE_GAME_MODE,
   STORE_PLAYERS,
   UPDATE_PLAYER_NUMBERS,
-} from "../actions/websocket";
+} from '../actions/websocket';
+import { connectionState } from '../../enums/enums';
 
 const initialState = {
   connectionStatus: connectionState.CONNECTION_INITIAL,
-  selectedGameMode: "",
+  selectedGameMode: '',
   gameModeCurrentUsers: 0,
   gameModeMaxUsers: 0,
-  players: [],
+  countdown: 0,
+  players: [
+    {
+      spawnIndex: 0,
+      id: 0,
+      userName: 'Test Elek',
+      kill: 1,
+      die: 2,
+    },
+    {
+      spawnIndex: 5,
+      id: 1,
+      userName: 'Homeless Couple',
+      kill: 3,
+      die: 4,
+    },
+  ],
 };
 
 const websocketReducer = (state = initialState, action) => {
   switch (action.type) {
+    case STORE_COUNTDOWN:
+      return {
+        ...state,
+        countdown: action.data.countDown,
+      };
     case STORE_GAME_MODE:
       return {
         ...state,
@@ -33,7 +55,11 @@ const websocketReducer = (state = initialState, action) => {
     case STORE_PLAYERS:
       return {
         ...state,
-        players: action.payload,
+        players: action.payload.map((data) => ({
+          ...data,
+          kill: 0,
+          die: 0,
+        })),
       };
     case CONNECTED_TO_WS:
       return {

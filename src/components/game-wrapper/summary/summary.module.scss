@@ -1,0 +1,37 @@
+.wrapper {
+  position: absolute;
+  width: 30%;
+  height: 30%;
+  background-color: white;
+  opacity: 0.6;
+  border: 3px solid red;
+  border-radius: 0 25px 25px 25px;
+  padding: 10px;
+  top: 150px;
+  left: 50px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.list-header {
+  font-weight: bold;
+}
+
+.list {
+  width: 100%;
+  color: black;
+  margin: 10px;
+  display: flex;
+  justify-content: space-around;
+  color: brown;
+}
+.list-name {
+  width: 50%;
+}
+.list-data {
+  text-align: center;
+  width: 25%;
+}

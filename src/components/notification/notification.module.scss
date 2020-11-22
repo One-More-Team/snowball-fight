@@ -17,6 +17,10 @@
     color: #274415;
     padding: 10px;
     filter: drop-shadow(0px 4px 6px #00000055);
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
     margin-top: -50px;
 
     i {

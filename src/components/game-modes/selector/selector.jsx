@@ -6,22 +6,26 @@ import { initConnection } from "../../../store/actions/common";
 import {
   GetGameCurrentUsers,
   GetGameMaxUsers,
+  GetGameMode,
 } from "../../../store/selectors/websocket";
 
 import styles from "./selector.module.scss";
 
-const Selector = ({ url }) => {
+const Selector = () => {
   const dispatch = useDispatch();
   const connectAndStart = (mode) => dispatch(initConnection(mode));
 
   const maxUser = useSelector(GetGameMaxUsers);
   const currentUser = useSelector(GetGameCurrentUsers);
+  const currentGameMode = useSelector(GetGameMode);
 
   const [mode, setMode] = useState("");
 
   const onClickHandler = (m) => {
-    setMode((pre) => m);
-    connectAndStart(m);
+    if (currentGameMode !== m) {
+      setMode(() => m);
+      connectAndStart(m);
+    }
   };
   return (
     <div className={styles.wrapper}>
