@@ -78,7 +78,7 @@ const GameUi = () => {
               width={200}
               height={100}
               label={"Memory"}
-              maxValueNum={20}
+              maxValueNum={10}
               maxValue={80}
               values={memoryStats}
             />
