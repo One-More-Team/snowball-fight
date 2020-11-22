@@ -28,13 +28,9 @@ const performanceReducer = (state = initialState, {type, payload}) => {
       let memoryUsageList = [];
 
       if (memory) {
-        const memoryUsage = {
-          jsHeapSizeLimit: memory.jsHeapSizeLimit,
-          totalJSHeapSize: memory.totalJSHeapSize,
-          usedJSHeapSize: memory.usedJSHeapSize,
-        };
+        const memoryUsage = memory.usedJSHeapSize / 10000000;
 
-        console.log(JSON.stringify(memoryUsage));
+        //console.log(`memoryUsage: ${memoryUsage}`);
 
         memoryUsageList = addNewSample(state.memoryUsageList, memoryUsage);
       }
@@ -44,14 +40,14 @@ const performanceReducer = (state = initialState, {type, payload}) => {
       const fps = measurementList.length / (payload.elapsedTime / 1000);
       const avarageRenderingTime = measurementList
         .map(performanceMeasure => performanceMeasure.duration)
-        .reduce((sum, val) => (sum + val) / measurementList.length, 0);
+        .reduce((sum, val) => (sum + val) / measurementList.length, 0) * 1000;
 
       performance.clearMarks('threejs-render-start-mark');
       performance.clearMarks('threejs-render-end-mark');
       performance.clearMeasures('threejs-render-measure');
 
-      console.log(`fps: ${fps}`);
-      console.log(`avarageRenderingTime: ${avarageRenderingTime}`);
+      //console.log(`fps: ${fps}`);
+      //console.log(`avarageRenderingTime: ${avarageRenderingTime}`);
 
       return {
         ...state,

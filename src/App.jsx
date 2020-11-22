@@ -31,7 +31,7 @@ import Loader from "./components/spinner/loader";
 
 import "./App.scss";
 
-const MeasureTime = 5000;
+const MeasureTime = 1000;
 
 const App = () => {
   const dispatch = useDispatch();
