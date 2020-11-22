@@ -16,6 +16,7 @@ import {
   storeUserID,
 } from '../store/actions/user';
 import {
+  storeCountDown,
   startGame,
   storePlayers,
   updateGameMode,
@@ -98,6 +99,10 @@ function subscribe(socket) {
           emit(storeUserID(rawData.data.id));
           emit(storePlayers(rawData.data.players));
           emit(startGame());
+          break;
+        }
+        case ServerMessages.COUNTDOWN: {
+          emit(storeCountDown(rawData.data));
           break;
         }
         case ServerMessages.SEND_WEBRTC_ANSWER: {

@@ -1,6 +1,7 @@
 import {
   CONNECTED_TO_WS,
   START_GAME,
+  STORE_COUNTDOWN,
   STORE_GAME_MODE,
   STORE_PLAYERS,
   UPDATE_PLAYER_NUMBERS,
@@ -12,6 +13,7 @@ const initialState = {
   selectedGameMode: '',
   gameModeCurrentUsers: 0,
   gameModeMaxUsers: 0,
+  countdown: 0,
   players: [
     {
       spawnIndex: 0,
@@ -32,6 +34,11 @@ const initialState = {
 
 const websocketReducer = (state = initialState, action) => {
   switch (action.type) {
+    case STORE_COUNTDOWN:
+      return {
+        ...state,
+        countdown: action.data.countDown,
+      };
     case STORE_GAME_MODE:
       return {
         ...state,
