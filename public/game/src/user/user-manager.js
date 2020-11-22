@@ -1,12 +1,21 @@
 import { ANIMATION } from "../enum/animation.js";
 import { create } from "./user.js";
+import { STATE } from "../../main.js";
 
 const users = [];
 
 let ownUser = null;
 let syncData = null;
 
-export const addUser = ({ scene, id, name, position, isOwn, onComplete }) => {
+export const addUser = ({
+  scene,
+  id,
+  name,
+  position,
+  isOwn,
+  onComplete,
+  sharedData,
+}) => {
   if (users.find((user) => user.id == id)) {
     console.log(`Multiple user creation request for ${id}`);
     return null;
@@ -26,7 +35,7 @@ export const updateUsers = (delta) => {
   });
 };
 
-export const syncUsers = ({ id, position }) => {
+export const syncUser = ({ id, position, rotation }) => {
   const user = users.find((user) => user.id === id);
   if (user) {
     const positionDiff = Math.sqrt(
@@ -52,7 +61,6 @@ export const syncUsers = ({ id, position }) => {
       },
     });
 
-    const { rotation } = position;
     gsap.to(user, {
       targetRotation: rotation,
       onUpdate: () => {
@@ -82,7 +90,11 @@ const setAnimationAction = ({ user, animation }) => {
 
 export const syncOwnUser = ({ serverCall, controls }) => {
   const now = Date.now();
-  if (ownUser && (syncData === null || now - syncData.lastSyncTime > 1000)) {
+  if (
+    sharedData.state !== STATE.WAITING_FOR_START &&
+    ownUser &&
+    (syncData === null || now - syncData.lastSyncTime > 1000)
+  ) {
     const currentPosition = {
       x: ownUser.physics.position.x.toFixed(1),
       y: ownUser.physics.position.y.toFixed(1),
@@ -111,8 +123,9 @@ export const syncOwnUser = ({ serverCall, controls }) => {
 
       serverCall(
         JSON.stringify({
-          header: "syncUser",
+          header: "updatePosition",
           data: {
+            type: "user",
             ...syncData,
           },
         })

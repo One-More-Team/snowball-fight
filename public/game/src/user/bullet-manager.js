@@ -70,3 +70,30 @@ export const updateBullets = ({ scene, physicsWorld }) => {
     return !old;
   });
 };
+
+export const syncBulletPosition = ({ id, position, rotation }) => {
+  const bullet = balls.find((b) => b.id === id);
+  if (bullet) {
+    if (bullet.positionTween) bullet.positionTween.kill();
+    bullet.positionTween = gsap.to(bullet.body.position, {
+      x: position.x,
+      y: position.y - 1,
+      z: position.z,
+      duration: 0.2,
+      ease: "linear",
+    });
+
+    gsap.to(bullet, {
+      targetRotation: rotation,
+      onUpdate: () => {
+        var euler = new THREE.Euler(
+          0, //rotation.x,
+          rotation.y + Math.PI,
+          0, //rotation.z,
+          "XYZ"
+        );
+        bullet.body.quaternion.setFromEuler(euler);
+      },
+    });
+  }
+};
