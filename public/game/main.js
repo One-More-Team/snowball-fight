@@ -6,6 +6,7 @@ import {
   syncOwnUser,
   removeUser,
   getOwnUser,
+  syncUser,
 } from "./src/user/user-manager.js";
 import {
   shoot,
@@ -173,19 +174,23 @@ const loadLevel = (onLoaded) => {
 };
 
 const createPlayers = (players, onComplete) => {
-  players.forEach((player) =>
-    addUser({
-      scene,
-      id: player.id,
-      name: player.name,
-      isOwn: player.id === _ownId,
-      position: { ...spawnPoints[player.spawnIndex] },
-      kill: player.kill,
-      die: player.die,
-      sharedData,
-    })
-  );
-  onComplete(); // atm it is half async
+  players.forEach((player) => {
+    if (player.id === _ownId) {
+      // set pos { ...spawnPoints[player.spawnIndex] },
+    } else {
+      addUser({
+        scene,
+        id: player.id,
+        name: player.name,
+        isOwn: player.id === _ownId,
+        position: { ...spawnPoints[player.spawnIndex] },
+        kill: player.kill,
+        die: player.die,
+        sharedData,
+      });
+    }
+  });
+  onComplete();
 };
 
 function init() {
@@ -234,30 +239,29 @@ window.createWorld = ({
     initThreeJS();
     createSkyBox();
     loadLevel(() => {
-      physicsWorld.add(
-        addUser({
-          scene,
-          id: userId,
-          name: userName,
-          isOwn: true,
-          position: { x: 10, y: 10, z: 10 },
-          onComplete: (user) => {
-            controls = new MobileFPSController(camera, user.physics, {
-              velocityFactor: 0.08,
-              sideVelocityFactor: 0.08,
-            });
-            scene.add(controls.getObject());
-            createPlayers(players, () => {
-              init();
-              animate();
-              console.log(`Snowball Fight is ready!`);
-              onReady();
-              controls.enabled = true;
-            });
-          },
-          sharedData,
-        }).physics
-      );
+      addUser({
+        scene,
+        id: userId,
+        name: userName,
+        isOwn: true,
+        position: { x: 10, y: 10, z: 10 },
+        onComplete: (user) => {
+          controls = new MobileFPSController(camera, user.physics, {
+            velocityFactor: 0.08,
+            sideVelocityFactor: 0.08,
+          });
+          scene.add(controls.getObject());
+          init();
+          animate();
+          console.log(`Snowball Fight is ready!`);
+          onReady();
+          createPlayers(players, () => {
+            controls.enabled = true;
+          });
+          physicsWorld.add(user.physics);
+        },
+        sharedData,
+      });
     });
   });
 };

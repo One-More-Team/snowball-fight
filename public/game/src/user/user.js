@@ -1,42 +1,59 @@
 import { FBXLoader } from "../../lib/jsm/loaders/FBXLoader.js";
 import { AnimationMixer } from "../../build/three.module.js";
+import { ANIMATION } from "../enum/animation.js";
 
-export const create = ({ id, name, position, isOwn }) => {
+export const create = ({ id, name, position, isOwn, scene, onComplete }) => {
   console.log(`Create user for ${id}`);
   let body = null;
   let object = null;
   let activeAction = null;
-  let animations = null;
+  let animations = [];
 
   const objLoader = new FBXLoader();
   let mixer;
-
   if (!isOwn) {
-    objLoader.load("./asset/3d/character/ybot.fbx", (o) => {
+    objLoader.load("../../game/game-assets/3d/character/ybot.fbx", (o) => {
       object = o;
-      object.traverse((child) => {
-        if (child.isMesh && child.material) {
-          console.log(child.material);
-        }
-      });
-      object.scale.set(0.01, 0.01, 0.01);
+      object.scale.set(0.1, 0.1, 0.1);
       object.position.set(position.x, position.y - 1, position.z);
       scene.add(object);
-      mixer = new AnimationMixer(object);
+      /* mixer = new AnimationMixer(object);
 
-      objLoader.load("./asset/3d/animation/Walking.fbx", (animation) => {
-        const walkAnimationAction = mixer.clipAction(animation.animations[0]);
-        animations[ANIMATION.WALK] = walkAnimationAction;
+      objLoader.load(
+        "../../game/game-assets/3d/animation/Walking.fbx",
+        (animation) => {
+          const walkAnimationAction = mixer.clipAction(animation.animations[0]);
+          animations[ANIMATION.WALK] = walkAnimationAction;
 
-        objLoader.load("./asset/3d/animation/Idle.fbx", (animation) => {
-          const idleAnimationAction = mixer.clipAction(animation.animations[0]);
-          animations[ANIMATION.IDLE] = idleAnimationAction;
-          activeAction = idleAnimationAction;
-          activeAction.reset();
-          activeAction.play();
-          scene.add(object);
-        });
-      });
+          objLoader.load(
+            "../../game/game-assets/3d/animation/Idle.fbx",
+            (animation) => {
+              const idleAnimationAction = mixer.clipAction(
+                animation.animations[0]
+              );
+              animations[ANIMATION.IDLE] = idleAnimationAction;
+              activeAction = idleAnimationAction;
+              activeAction.reset();
+              activeAction.play();
+              scene.add(o);
+              if (onComplete)
+                onComplete({
+                  id,
+                  name,
+                  position,
+                  object: isOwn ? null : object,
+                  physics: isOwn ? body : null,
+                  mixer,
+                  hasAnimation: !isOwn,
+                  mixer: "",
+                  activeAnimation: "",
+                  animations,
+                  targetRotation: 0,
+                });
+            }
+          );
+        }
+      ); */
     });
   } else {
     const mass = 5;
@@ -46,18 +63,19 @@ export const create = ({ id, name, position, isOwn }) => {
     body.addShape(shape);
     body.position.set(position.x, position.y, position.z);
     body.linearDamping = 0.9;
+    if (onComplete)
+      onComplete({
+        id,
+        name,
+        position,
+        object: isOwn ? null : object,
+        physics: isOwn ? body : null,
+        mixer,
+        hasAnimation: !isOwn,
+        mixer: "",
+        activeAnimation: "",
+        animations,
+        targetRotation: 0,
+      });
   }
-
-  return {
-    id,
-    name,
-    position,
-    object: isOwn ? null : object,
-    physics: isOwn ? body : null,
-    mixer,
-    hasAnimation: !isOwn,
-    mixer: "",
-    activeAnimation: "",
-    animations,
-  };
 };

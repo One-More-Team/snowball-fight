@@ -6,6 +6,7 @@ const users = [];
 
 let ownUser = null;
 let syncData = null;
+let _sharedData = null;
 
 export const addUser = ({
   scene,
@@ -16,16 +17,24 @@ export const addUser = ({
   onComplete,
   sharedData,
 }) => {
+  _sharedData = sharedData;
   if (users.find((user) => user.id == id)) {
     console.log(`Multiple user creation request for ${id}`);
     return null;
   } else {
-    const user = create({ id, name, position, isOwn });
-    users.push(user);
-    if (isOwn) ownUser = user;
-    else scene.add(user.object);
-    if (onComplete) onComplete(user);
-    return user;
+    const user = create({
+      id,
+      name,
+      position,
+      isOwn,
+      scene,
+      onComplete: (user) => {
+        users.push(user);
+        console.log(users.length);
+        if (isOwn) ownUser = user;
+        if (onComplete) onComplete(user);
+      },
+    });
   }
 };
 
@@ -37,7 +46,7 @@ export const updateUsers = (delta) => {
 
 export const syncUser = ({ id, position, rotation }) => {
   const user = users.find((user) => user.id === id);
-  if (user) {
+  if (user && user.object) {
     const positionDiff = Math.sqrt(
       Math.pow(user.object.position.x - position.x, 2),
       Math.pow(user.object.position.z - position.z, 2)
@@ -45,7 +54,7 @@ export const syncUser = ({ id, position, rotation }) => {
 
     if (positionDiff > 0.01)
       setAnimationAction({ user, animation: ANIMATION.WALK });
-
+    /*
     if (user.animationTimeout) clearTimeout(user.animationTimeout);
     if (user.positionTween) user.positionTween.kill();
     user.positionTween = gsap.to(user.object.position, {
@@ -72,7 +81,7 @@ export const syncUser = ({ id, position, rotation }) => {
         );
         user.object.quaternion.setFromEuler(euler);
       },
-    });
+    }); */
   }
 };
 
@@ -91,7 +100,7 @@ const setAnimationAction = ({ user, animation }) => {
 export const syncOwnUser = ({ serverCall, controls }) => {
   const now = Date.now();
   if (
-    sharedData.state !== STATE.WAITING_FOR_START &&
+    _sharedData.state !== STATE.WAITING_FOR_START &&
     ownUser &&
     (syncData === null || now - syncData.lastSyncTime > 1000)
   ) {
@@ -121,15 +130,13 @@ export const syncOwnUser = ({ serverCall, controls }) => {
         rotation: { ...currentRotation },
       };
 
-      serverCall(
-        JSON.stringify({
-          header: "updatePosition",
-          data: {
-            type: "user",
-            ...syncData,
-          },
-        })
-      );
+      serverCall({
+        header: "updatePosition",
+        data: {
+          type: "user",
+          ...syncData,
+        },
+      });
     }
   }
 };
@@ -139,7 +146,7 @@ export const removeUser = ({ scene, id }) => {
   var user = users.find(({ id }) => id === id);
   if (user) {
     scene.remove(user.mesh);
-    scene.remove(user.object);
+    scene.remove(user.objectContainer?.object);
   } else console.log(`Remove error, user not found`);
 
   users = users.filter(({ id }) => id !== id);
