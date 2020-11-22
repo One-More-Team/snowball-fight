@@ -221,7 +221,11 @@ const animate = () => {
   renderer.render(scene, camera);
   performance.mark("threejs-render-end-mark");
 
-  performance.measure("threejs-render-measure", "threejs-render-start-mark", "threejs-render-end-mark");
+  performance.measure(
+    "threejs-render-measure",
+    "threejs-render-start-mark",
+    "threejs-render-end-mark"
+  );
 
   if (USE_DEBUG_RENDERER) debugRenderer.update();
 
