@@ -48,11 +48,11 @@ const GameUi = () => {
         <TouchController reportPercentages={reportRotationPercentages} />
       </div>
       <div className={styles.RightActions}>
-        <div className={styles.Shoot} onClick={shootRequest}>
+        <div className={styles.Shoot} onTouchStart={shootRequest}>
           <div className={styles.Filler} ref={shootFiller}></div>
           <i className="fas fa-meteor"></i>
         </div>
-        <div className={styles.Jump} onClick={jumpRequest}>
+        <div className={styles.Jump} onTouchStart={jumpRequest}>
           <i className="fas fa-angle-double-up"></i>
         </div>
       </div>

@@ -7,6 +7,7 @@ import {
   removeUser,
   getOwnUser,
   syncUser,
+  setUserPosition,
 } from "./src/user/user-manager.js";
 import {
   shoot,
@@ -44,6 +45,7 @@ const sharedData = {
 };
 
 let _ownId = "";
+let _gameMode = "";
 let _serverCall = (args) => {};
 
 const initThreeJS = () => {
@@ -117,7 +119,9 @@ const loadLevel = (onLoaded) => {
   var loader = new FBXLoader();
   spawnPoints = [];
 
-  loader.load(dmLevels.find((level) => level.id === 0).url, (object) => {
+  const levelList = _gameMode === "team" ? teamLevels : dmLevels;
+
+  loader.load(levelList.find((level) => level.id === 0).url, (object) => {
     object.traverse(function (child) {
       if (child && child.isMesh) {
         child.castShadow = true;
@@ -177,7 +181,7 @@ const loadLevel = (onLoaded) => {
 const createPlayers = (players, onComplete) => {
   players.forEach((player) => {
     if (player.id === _ownId) {
-      // set pos { ...spawnPoints[player.spawnIndex] },
+      setUserPosition(spawnPoints[player.spawnIndex]);
     } else {
       addUser({
         scene,
@@ -245,6 +249,7 @@ window.createWorld = ({
   userId = "ownId",
 }) => {
   _ownId = userId;
+  _gameMode = players.length === 4 ? "deathMatch" : "team";
   _serverCall = serverCall;
   sharedData.state = STATE.WAITING_FOR_START;
 
