@@ -79,7 +79,7 @@ const GameUi = () => {
               height={100}
               label={"Memory"}
               maxValueNum={10}
-              maxValue={10}
+              maxValue={80}
               values={memoryStats}
             />
             <Stats
@@ -87,15 +87,15 @@ const GameUi = () => {
               height={100}
               label={"FPS"}
               maxValueNum={10}
-              maxValue={10}
+              maxValue={60}
               values={fpsStats}
             />
             <Stats
               width={200}
               height={100}
-              label={"Render Time"}
+              label={"Render t."}
               maxValueNum={10}
-              maxValue={10}
+              maxValue={40}
               values={renderTimeStats}
             />
           </div>
