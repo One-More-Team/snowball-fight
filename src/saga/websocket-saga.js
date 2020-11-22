@@ -109,7 +109,7 @@ function subscribe(socket) {
           break;
         }
         default: {
-          // todo
+          window.serverMessage(rawData);
         }
       }
     };
