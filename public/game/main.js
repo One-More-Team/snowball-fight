@@ -4,11 +4,11 @@ import {
   addUser,
   updateUsers,
   syncOwnUser,
-  syncUsers,
   removeUser,
   getOwnUser,
+  syncUserPosition
 } from "./src/user/user-manager.js";
-import { shoot, updateBullets } from "./src/user/bullet-manager.js";
+import { shoot, updateBullets, syncBulletPosition } from "./src/user/bullet-manager.js";
 
 import assetConfig from "./asset-config.js";
 import { dmLevels, teamLevels } from "./level-config.js";
@@ -16,6 +16,11 @@ import { MobileFPSController } from "./src/mobile-fps-controller.js";
 
 const USE_DEBUG_RENDERER = false;
 let debugRenderer = null;
+
+export const STATE = {
+  WAITING_FOR_START: "WAITING_FOR_START",
+  IN_PROGRESS: "IN_PROGRESS",
+};
 
 const clock = new THREE.Clock();
 const controller = { movement: { x: 0, y: 0 }, rotation: { x: 0, y: 0 } };
@@ -27,7 +32,13 @@ let renderer;
 let controls;
 let bulletManager = null;
 let textureAssets = {};
+let spawnPoints = [];
 
+const sharedData = {
+  state = STATE.WAITING_FOR_START
+};
+
+let _ownId = "";
 let _serverCall = (args) => {};
 
 const initThreeJS = () => {
@@ -99,6 +110,7 @@ const createSkyBox = () => {
 
 const loadLevel = (onLoaded) => {
   var loader = new FBXLoader();
+  spawnPoints = [];
 
   loader.load(dmLevels.find((level) => level.id === 0).url, (object) => {
     object.traverse(function (child) {
@@ -116,6 +128,11 @@ const loadLevel = (onLoaded) => {
 
         if (child.name.includes("Spawn")) {
           child.visible = false;
+          spawnPoints.push({
+            x: child.position.x,
+            y: child.position.y,
+            z: child.position.z,
+          });
         } else {
           if (child.name.includes("Collider")) {
             child.geometry.computeBoundingBox();
@@ -152,6 +169,22 @@ const loadLevel = (onLoaded) => {
   });
 };
 
+const createPlayers = (players, onComplete) => {
+  players.forEach((player) =>
+    addUser({
+      scene,
+      id: player.id,
+      name: player.name,
+      isOwn: player.id === _ownId,
+      position: { ...spawnPoints[player.spawnIndex] },
+      kill: player.kill,
+      die: player.die,
+      sharedData,
+    })
+  );
+  onComplete(); // atm it is half async
+};
+
 function init() {
   document.body.appendChild(renderer.domElement);
   window.addEventListener("resize", onWindowResize, false);
@@ -182,8 +215,17 @@ const animate = () => {
   requestAnimationFrame(animate);
 };
 
-window.createWorld = ({ serverCall, onReady, userName, id = "ownId" }) => {
+window.createWorld = ({
+  serverCall,
+  onReady,
+  userName,
+  players,
+  userId = "ownId",
+}) => {
+  _ownId = userId;
   _serverCall = serverCall;
+  sharedData.state = STATE.WAITING_FOR_START;
+
   loadTextures(assetConfig.textures, () => {
     physicsWorld = createPhysicsWorld();
     initThreeJS();
@@ -192,7 +234,7 @@ window.createWorld = ({ serverCall, onReady, userName, id = "ownId" }) => {
       physicsWorld.add(
         addUser({
           scene,
-          id: id,
+          id: userId,
           name: userName,
           isOwn: true,
           position: { x: 10, y: 10, z: 10 },
@@ -202,21 +244,15 @@ window.createWorld = ({ serverCall, onReady, userName, id = "ownId" }) => {
               sideVelocityFactor: 0.08,
             });
             scene.add(controls.getObject());
-            init();
-            animate();
-            console.log(`Snowball Fight is ready!`);
-            onReady();
-            controls.enabled = true;
-
-            var element = document.body;
-            element.onclick = () => {
-              element.requestPointerLock =
-                element.requestPointerLock ||
-                element.mozRequestPointerLock ||
-                element.webkitRequestPointerLock;
-              element.requestPointerLock();
-            };
+            createPlayers(players, () => {
+              init();
+              animate();
+              console.log(`Snowball Fight is ready!`);
+              onReady();
+              controls.enabled = true;
+            });
           },
+          sharedData,
         }).physics
       );
     });
@@ -231,11 +267,11 @@ window.addUsers = (users) => {
       name: name,
       isOwn: false,
       position: position,
+      sharedData,
     })
   );
 };
 window.removeUser = (id) => removeUser({ scene, id });
-window.updatePosition = syncUsers;
 window.touchController = {
   movement: { reportPercentages: (v) => (controller.movement = { ...v }) },
   rotation: { reportPercentages: (v) => (controller.rotation = { ...v }) },
@@ -243,4 +279,20 @@ window.touchController = {
 window.actions = {
   jump: () => controls.jump(),
   shoot: () => shoot({ user: getOwnUser(), camera, physicsWorld, scene }),
+};
+
+// data gets an extra id param automatically by the server
+window.serverMessage = ({ header, data }) => {
+  switch(header) {
+    case "start":
+      sharedData.state = STATE.IN_PROGRESS;
+      break;
+
+    case "updatePosition":
+      if (data.type === "user") syncUser(data);
+      if (data.type === "bullet") syncBulletPosition(data);
+      break;
+
+    default
+  }
 };
