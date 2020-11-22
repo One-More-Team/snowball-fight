@@ -35,7 +35,7 @@ let textureAssets = {};
 let spawnPoints = [];
 
 const sharedData = {
-  state = STATE.WAITING_FOR_START
+  state: STATE.WAITING_FOR_START
 };
 
 let _ownId = "";
