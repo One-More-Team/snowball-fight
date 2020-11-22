@@ -15,27 +15,28 @@ const GameUi = () => {
   const reportRotationPercentages = (v) =>
     window?.touchController?.rotation.reportPercentages(v);
 
+  const calculateShootPercentage = () => {
+    shootFiller.current.style.height = `${
+      Math.max((Date.now() - lastShootTime) / SHOOT_DELAY_TIME) * 100
+    }%`;
+  };
+
   const shootRequest = () => {
     if (Date.now() - lastShootTime > SHOOT_DELAY_TIME) {
       setLastShootTime(Date.now());
       window.actions.shoot();
+      calculateShootPercentage();
     }
   };
 
   const jumpRequest = () => window.actions.jump();
 
   useEffect(() => {
-    const calculateShootPercentage = () => {
-      shootFiller.current.style.height = `${
-        Math.max((Date.now() - lastShootTime) / SHOOT_DELAY_TIME) * 100
-      }%`;
-    };
-
     const interval = setInterval(calculateShootPercentage, 50);
     return () => {
       clearInterval(interval);
     };
-  }, [lastShootTime]);
+  });
 
   return (
     <div className={styles.Wrapper}>

@@ -38,8 +38,8 @@ export const MobileFPSController = function (
   };
 
   this.setRotation = (rotation) => {
-    yawObject.rotation.y -= -rotation.x * 0.05;
-    pitchObject.rotation.x -= -rotation.y * 0.05;
+    yawObject.rotation.y -= -rotation.x * 0.03;
+    pitchObject.rotation.x -= -rotation.y * 0.03;
 
     pitchObject.rotation.x = Math.max(
       -PI_2,

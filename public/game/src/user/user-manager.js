@@ -76,7 +76,7 @@ export const syncUser = ({ id, position, rotation }) => {
       ease: "linear",
       onUpdate: () => {
         var euler = new THREE.Euler(
-          rotation.x,
+          0 /* rotation.x */,
           rotation.y - Math.PI,
           rotation.z,
           "XYZ"
@@ -104,7 +104,7 @@ export const syncOwnUser = ({ serverCall, controls }) => {
   if (
     _sharedData.state !== STATE.WAITING_FOR_START &&
     ownUser &&
-    (syncData === null || now - syncData.lastSyncTime > 100)
+    (syncData === null || now - syncData.lastSyncTime > 25)
   ) {
     const currentPosition = {
       x: ownUser.physics.position.x.toFixed(1),
