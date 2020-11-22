@@ -12,6 +12,7 @@ import {
   shoot,
   updateBullets,
   syncBulletPosition,
+  syncOwnBullet,
 } from "./src/user/bullet-manager.js";
 
 import assetConfig from "./asset-config.js";
@@ -212,6 +213,10 @@ const animate = () => {
   updateBullets({ scene, physicsWorld });
   updateUsers(delta);
   syncOwnUser({ serverCall: _serverCall, controls });
+  syncOwnBullet({
+    serverCall: _serverCall,
+    isStarted: sharedData.state !== STATE.WAITING_FOR_START,
+  });
 
   controls.setMovement(controller.movement);
   controls.setRotation(controller.rotation);
@@ -306,11 +311,17 @@ window.serverMessage = ({ header, data }) => {
 
     case "updatePosition":
       if (data.type === "user") syncUser(data);
-      if (data.type === "bullet") syncBulletPosition(data);
+      if (data.type === "bullet") syncBulletPosition({ ...data, scene });
       break;
 
     default:
   }
 };
 
-document.addEventListener('touchmove',function(e) {e.preventDefault()}, {passive:false});
+document.addEventListener(
+  "touchmove",
+  function (e) {
+    e.preventDefault();
+  },
+  { passive: false }
+);
