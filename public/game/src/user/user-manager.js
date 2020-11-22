@@ -148,7 +148,7 @@ export const removeUser = ({ scene, id }) => {
   var user = users.find(({ id }) => id === id);
   if (user) {
     scene.remove(user.mesh);
-    scene.remove(user.objectContainer?.object);
+    scene.remove(user.objectContainer ? user.objectContainer.object : null);
   } else console.log(`Remove error, user not found`);
 
   users = users.filter(({ id }) => id !== id);
