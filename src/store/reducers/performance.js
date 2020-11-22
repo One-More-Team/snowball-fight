@@ -24,12 +24,23 @@ const addNewSample = (sampleList, sample) => {
 const performanceReducer = (state = initialState, {type, payload}) => {
   switch (type) {
     case MEASURE:
-      const memoryUsage = {
-        jsHeapSizeLimit: performance.memory.jsHeapSizeLimit,
-        totalJSHeapSize: performance.memory.totalJSHeapSize,
-        usedJSHeapSize: performance.memory.usedJSHeapSize,
-      };
+      const memory = performance.memory;
+      let memoryUsageList = [];
+
+      if (memory) {
+        const memoryUsage = {
+          jsHeapSizeLimit: memory.jsHeapSizeLimit,
+          totalJSHeapSize: memory.totalJSHeapSize,
+          usedJSHeapSize: memory.usedJSHeapSize,
+        };
+
+        console.log(JSON.stringify(memoryUsage));
+
+        memoryUsageList = addNewSample(state.memoryUsageList, memoryUsage);
+      }
+
       const measurementList = performance.getEntriesByName('threejs-render-measure');
+
       const fps = measurementList.length / (payload.elapsedTime / 1000);
       const avarageRenderingTime = measurementList
         .map(performanceMeasure => performanceMeasure.duration)
@@ -39,16 +50,15 @@ const performanceReducer = (state = initialState, {type, payload}) => {
       performance.clearMarks('threejs-render-end-mark');
       performance.clearMeasures('threejs-render-measure');
 
-      console.log(JSON.stringify(memoryUsage));
       console.log(`fps: ${fps}`);
       console.log(`avarageRenderingTime: ${avarageRenderingTime}`);
 
       return {
         ...state,
-        memoryUsageList: addNewSample(state.memoryUsageList, memoryUsage),
         fpsList: addNewSample(state.fpsList, fps),
         renderingTimeList: addNewSample(state.renderingTimeList, avarageRenderingTime),
-      }
+        memoryUsageList,
+      };
 
     default:
       return state;
