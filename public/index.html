@@ -17,24 +17,16 @@
       src="https://kit.fontawesome.com/8bba5946ab.js"
       crossorigin="anonymous"
     ></script>
-    <script>
-      window.addEventListener(
-        "orientationchange",
-        function () {
-          if (window.orientation == -90) {
-            document.getElementById("orient").className = "wrongOrientation";
-          }
-          if (window.orientation == 90) {
-            document.getElementById("orient").className = "wrongOrientation";
-          }
-          if (window.orientation == 0) {
-            document.getElementById("orient").className = "";
-          }
-        },
-        true
-      );
-    </script>
     <style>
+      @supports (padding: max(0px)) {
+        body,
+        header,
+        footer {
+          padding-left: min(0vmin, env(safe-area-inset-left));
+          padding-right: min(0vmin, env(safe-area-inset-right));
+        }
+      }
+
       #orient {
         display: none;
         position: absolute;
@@ -45,10 +37,12 @@
         align-items: center;
         justify-content: center;
         z-index: 999;
+        pointer-events: none;
       }
-
-      .wrongOrientation {
-        display: flex;
+      @media screen and (orientation: landscape) {
+        #orient {
+          display: none;
+        }
       }
     </style>
     <meta
